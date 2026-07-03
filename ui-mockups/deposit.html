@@ -3,116 +3,107 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Bank Deposit — BCMS</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/styles.css">
+  <title>Bank Deposit — Branch Cash (Odoo 19 CE)</title>
+  <link rel="stylesheet" href="assets/odoo.css">
 </head>
-<body data-page="deposit" data-role="Cashier" data-user="Priya Nair">
-  <main class="content">
-    <div class="breadcrumb"><span>Closing &amp; Approvals</span><span class="sep">/</span><b>Bank Deposit</b></div>
-    <div class="page-head">
-      <div class="titles">
-        <h1>Record bank deposit</h1>
-        <p>Deposit slip and acknowledgement are required before verification <span class="muted">(BR-07)</span>.</p>
+<body class="o-app" data-menu="deposits" data-user="Priya Nair" data-role="Cashier">
+
+  <div class="o-cp">
+    <div class="o-cp-top">
+      <div class="o-cp-actions">
+        <button class="btn btn-primary btn-sm">Save</button>
+        <button class="btn btn-default btn-sm">Discard</button>
+        <div class="o-breadcrumb"><a href="#">Bank Deposits</a><span class="sep">/</span><b>DEP/AND/2026-27/000088</b></div>
       </div>
     </div>
+  </div>
 
-    <div class="grid cols-verify">
-      <!-- LEFT: new deposit form -->
-      <div class="card">
-        <div class="card-head"><div><h3>New deposit</h3><p>Direct branch deposit or via pickup agency</p></div></div>
-        <div class="card-pad">
-          <div class="mb-3">
-            <label class="field mb-1"><span style="font-size:12.5px;font-weight:600;color:#334155">Deposit type <span class="req" style="color:var(--destructive)">*</span></span></label>
-            <div class="seg"><button class="on">Direct to bank</button><button>Pickup agency</button></div>
-          </div>
-
-          <div class="form-grid">
-            <div class="field">
-              <label>Bank account <span class="req">*</span></label>
-              <select class="select"><option>HDFC Bank ••4021 (Current)</option><option>ICICI Bank ••7788 (Current)</option></select>
-            </div>
-            <div class="field">
-              <label>Deposit amount <span class="req">*</span></label>
-              <div class="input-wrap"><span class="prefix">₹</span><input class="input with-prefix num" value="1,50,000"></div>
-            </div>
-            <div class="field">
-              <label>Deposit date <span class="req">*</span></label>
-              <input class="input" value="02-07-2026">
-            </div>
-            <div class="field">
-              <label>Slip / reference no. <span class="req">*</span></label>
-              <input class="input mono" value="HDFC-DEP-88213">
-            </div>
-            <div class="field full">
-              <label>Remarks</label>
-              <textarea class="textarea" placeholder="Optional note…">Cash deposit — proceeds from 02-07 collections.</textarea>
-            </div>
-          </div>
-
-          <div class="divider"></div>
-          <b class="small">Deposit slip <span class="req" style="color:var(--destructive)">*</span></b>
-          <div class="dropzone mt-1">
-            <div data-icon="upload" style="font-size:0"></div>
-            <div style="margin-top:8px"><b>Upload deposit slip</b> — PDF / JPG · ≤ 10 MB</div>
-          </div>
-          <div class="file-chip"><span class="fico" data-icon="file"></span><div style="flex:1"><b>hdfc-deposit-slip.jpg</b><br><small>420 KB</small></div><span class="ok" data-icon="check"></span></div>
-
-          <b class="small" style="display:block;margin-top:16px">Bank acknowledgement <span class="tiny muted">(can be added later)</span></b>
-          <div class="alert alert-warn mt-1"><span data-icon="clock"></span><div>Not yet uploaded — deposit will sit as <b>Pending acknowledgement</b> and appear on the Pending Deposits report.</div></div>
-
-          <a class="btn btn-primary btn-block mt-3" href="#" data-icon="landmark">Record deposit</a>
+  <div class="o-content o-form-bg">
+    <div class="o-form">
+      <div class="o-form-statusbar">
+        <div class="o-sb-actions">
+          <button class="btn btn-primary" data-svg="bank">Record Deposit</button>
+          <button class="btn btn-default disabled" title="Verified by Branch Accountant (maker ≠ checker)">Verify</button>
+        </div>
+        <div class="o-statusbar">
+          <div class="o-stage done">Recorded</div>
+          <div class="o-stage cur">Pending Ack</div>
+          <div class="o-stage">Verified</div>
         </div>
       </div>
 
-      <!-- RIGHT: today's deposits + verify -->
-      <div style="display:grid;gap:18px">
-        <div class="card">
-          <div class="card-head"><div><h3>Today's deposits</h3><p>Andheri (Service)</p></div></div>
-          <div class="table-wrap">
-            <table class="tbl">
-              <thead><tr><th>Deposit</th><th>Account</th><th class="th-right">Amount</th><th>Status</th></tr></thead>
+      <div class="o-sheet">
+        <div class="o-form-title">DEP/AND/2026-27/000088</div>
+        <div class="o-subtitle">Andheri (Service) · Priya Nair (Cashier)</div>
+
+        <div class="o-field" style="max-width:520px">
+          <label>Deposit type <span class="req">*</span></label>
+          <div class="o-val"><div class="o-seg" data-mode-seg><button class="on" data-mode="direct">Direct to bank</button><button data-mode="pickup">Pickup agency</button></div></div>
+        </div>
+
+        <div class="o-groups">
+          <div>
+            <div class="o-group-title">Deposit</div>
+            <div class="o-field" data-mode-panel="direct"><label>Bank account <span class="req">*</span></label><div class="o-val"><select class="o-select"><option>HDFC Bank ••4021 (Current)</option><option>ICICI Bank ••7788 (Current)</option></select></div></div>
+            <div class="o-field" data-mode-panel="pickup" style="display:none"><label>Pickup agency <span class="req">*</span></label><div class="o-val"><select class="o-select"><option>SecureCash Logistics</option><option>CMS Cash Management</option></select></div></div>
+            <div class="o-field"><label>Amount <span class="req">*</span></label><div class="o-val"><input class="o-input o-amt num" value="1,50,000.00"> ₹</div></div>
+            <div class="o-field"><label>Deposit date <span class="req">*</span></label><div class="o-val"><input class="o-input" value="02-07-2026"></div></div>
+            <div class="o-field"><label>Slip / reference no. <span class="req">*</span></label><div class="o-val"><input class="o-input" value="HDFC-DEP-88213"></div></div>
+          </div>
+          <div>
+            <div class="o-group-title">Status</div>
+            <div class="o-field"><label>Status</label><div class="o-val"><span class="o-badge b-warning"><span class="dot"></span>Pending acknowledgement</span></div></div>
+            <div class="o-field"><label>Verified by</label><div class="o-val deco-muted">— (Branch Accountant)</div></div>
+            <div class="o-field"><label>Remarks</label><div class="o-val"><textarea class="o-textarea">Cash deposit — proceeds from 02-07 collections.</textarea></div></div>
+          </div>
+        </div>
+
+        <div class="o-notebook" data-nb style="margin-top:16px">
+          <div class="o-nb-tabs">
+            <button class="on" data-tab="docs">Slip & acknowledgement</button>
+            <button data-tab="today">Today's deposits</button>
+          </div>
+          <div class="o-nb-page on" data-page="docs">
+            <b class="small">Deposit slip <span class="req">*</span></b>
+            <div class="o-filechip"><span class="fi" data-svg="file"></span><div style="flex:1"><b>hdfc-deposit-slip.jpg</b><br><span class="deco-muted tiny">420 KB</span></div><span class="ok" data-svg="check"></span></div>
+            <b class="small" style="display:block;margin-top:12px">Bank acknowledgement <span class="deco-muted tiny">(can be added later)</span></b>
+            <div class="o-alert o-alert-warn mt-1" data-svg="clock"><div>Not yet uploaded — deposit sits as <b>Pending acknowledgement</b> and appears on the Pending Deposits report (BR-07).</div></div>
+          </div>
+          <div class="o-nb-page" data-page="today">
+            <table class="o-lines">
+              <thead><tr><th>Deposit</th><th>Account</th><th class="r">Amount</th><th>Status</th></tr></thead>
               <tbody>
-                <tr>
-                  <td><span class="ref-code">DEP/AND/0088</span></td>
-                  <td class="small">HDFC ••4021</td>
-                  <td class="money">₹1,50,000</td>
-                  <td><span class="badge badge-amber"><span class="bdot"></span>Pending ack</span></td>
-                </tr>
-                <tr>
-                  <td><span class="ref-code">DEP/AND/0087</span></td>
-                  <td class="small">ICICI ••7788</td>
-                  <td class="money">₹2,00,000</td>
-                  <td><span class="badge badge-sky"><span class="bdot"></span>Recorded</span></td>
-                </tr>
-                <tr>
-                  <td><span class="ref-code">DEP/AND/0086</span></td>
-                  <td class="small">HDFC ••4021</td>
-                  <td class="money">₹1,10,000</td>
-                  <td><span class="badge badge-emerald"><span class="bdot"></span>Verified</span></td>
-                </tr>
+                <tr><td>DEP/AND/…/000088</td><td>HDFC ••4021</td><td class="r num">₹1,50,000.00</td><td><span class="o-badge b-warning">Pending ack</span></td></tr>
+                <tr><td>DEP/AND/…/000087</td><td>ICICI ••7788</td><td class="r num">₹2,00,000.00</td><td><span class="o-badge b-info">Recorded</span></td></tr>
+                <tr><td>DEP/AND/…/000086</td><td>HDFC ••4021</td><td class="r num">₹1,10,000.00</td><td><span class="o-badge b-success">Verified</span></td></tr>
               </tbody>
             </table>
           </div>
         </div>
 
-        <div class="card card-pad">
-          <b class="small">Deposit lifecycle</b>
-          <div class="stepper mt-2" style="gap:0">
-            <div class="step done"><div class="dot" data-icon="check" style="font-size:0"></div><div class="lbl">Recorded</div></div>
-            <div class="bar done"></div>
-            <div class="step active"><div class="dot">2</div><div class="lbl">Ack uploaded</div></div>
-            <div class="bar"></div>
-            <div class="step todo"><div class="dot">3</div><div class="lbl">Accountant verifies</div></div>
-          </div>
-          <div class="alert alert-info mt-3"><span data-icon="shield"></span>
-            <div>Verification is done by the <b>Branch Accountant</b> (S. Rao) — the cashier who records a deposit cannot verify it <span class="muted">(BR-03)</span>.</div>
+        <div class="o-alert o-alert-info mt-2" data-svg="info">
+          <div>Verification is done by the <b>Branch Accountant</b> (S. Rao) — the cashier who records a deposit cannot verify it (BR-03).</div>
+        </div>
+      </div>
+
+      <div class="o-chatter" data-chatter>
+        <div class="o-chatter-top">
+          <button class="btn btn-secondary btn-sm" data-cbtn="msg" data-svg="send">Send message</button>
+          <button class="btn btn-link btn-sm" data-cbtn="note" data-svg="edit">Log note</button>
+          <button class="btn btn-link btn-sm" data-svg="clock">Activities</button>
+          <div class="o-followers"><span data-svg="user">2</span><span data-svg="paperclip">1</span></div>
+        </div>
+        <div class="o-msg">
+          <div class="o-ava" style="background:#8e6a82">PN</div>
+          <div class="o-mbody">
+            <div class="o-mhead"><span class="o-mauthor">Priya Nair</span><span class="o-mtime">Today 16:12</span></div>
+            <div class="o-mtext">Deposit recorded; slip attached. Awaiting bank acknowledgement.</div>
+            <div class="o-tracking"><b>Status:</b> Recorded → Pending Ack</div>
           </div>
         </div>
       </div>
     </div>
-  </main>
-  <script src="assets/app.js"></script>
+  </div>
+  <script src="assets/odoo.js"></script>
 </body>
 </html>

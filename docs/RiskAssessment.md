@@ -1,7 +1,8 @@
 # Risk Assessment & Register
 
 **Project:** Branch Cash Management System (BCMS) — Prabal Motors Private Limited
-**Version:** 1.0 · **Date:** 2026-07-01 · **Status:** Draft for Client Review
+**Platform:** Odoo 19 Community Edition — one fully custom module (`branch_cash_management`)
+**Version:** 2.0 · **Date:** 2026-07-03 · **Status:** Draft for Client Review
 
 > Identifies, rates, and plans mitigations for project, technical, security, operational, and business risks. Scoring: **Likelihood (L)** and **Impact (I)** each 1–5; **Score = L × I**; Severity: 1–6 Low, 8–12 Medium, 15–25 High.
 
@@ -37,20 +38,20 @@ Severity bands: **Low** ≤6 · **Medium** 8–12 · **High** ≥15.
 
 | ID | Risk | L | I | Score | Sev | Mitigation | Owner |
 |----|------|---|---|-------|-----|-----------|-------|
-| RSK-03 | **RLS misconfiguration** leaks cross-branch data. | 3 | 5 | 15 | High | Deny-by-default policies; pgTAP + client-SDK RLS test suite; security review; index RLS columns. | Tech Lead |
-| RSK-07 | **Maker-checker** bypass via API or admin. | 2 | 5 | 10 | Med | Enforce in 3 layers (app, Edge Function, DB trigger); negative tests; audit alerts. | Tech Lead |
-| RSK-08 | **Money bugs** (rounding, duplicate receipts, wrong variance). | 3 | 5 | 15 | High | `numeric` money type, generated columns, idempotency keys, unit tests on financial math, reconciliation checks. | Tech Lead / QA |
-| RSK-09 | **Performance** degrades at scale (search, dashboards). | 3 | 3 | 9 | Med | Indexes + `pg_trgm`, cursor pagination, materialised views, read replica, load testing. | Tech Lead |
-| RSK-15 | Vendor lock-in / Supabase limits. | 2 | 3 | 6 | Low | Standard Postgres; portable schema; abstractions at data layer. | Architect |
+| RSK-03 | **Record-rule misconfiguration** leaks cross-branch data. | 3 | 5 | 15 | High | Deny-by-default ACLs + record rules; Odoo record-rule test suite (`with_user`, remembering superuser bypass); security review; index record-rule fields. | Tech Lead |
+| RSK-07 | **Maker-checker** bypass via External API or admin. | 2 | 5 | 10 | Med | Enforce in method guards + `@api.constrains` + `_sql_constraints`; confine superuser to admin; negative tests; audit alerts. | Tech Lead |
+| RSK-08 | **Money bugs** (rounding, duplicate receipts, wrong variance). | 3 | 5 | 15 | High | `Monetary` fields, computed/stored fields, state-guarded methods + unique `ir.sequence`/`_sql_constraints`, unit tests on financial math, reconciliation checks. | Tech Lead / QA |
+| RSK-09 | **Performance** degrades at scale (search, dashboards). | 3 | 3 | 9 | Med | Field indexes + optional `pg_trgm`, server-side pagination, stored aggregates, more Odoo workers + PG tuning, load testing. | Tech Lead |
+| RSK-15 | **Odoo CE major-version upgrade** effort / self-hosting ops burden. | 2 | 3 | 6 | Low | Idiomatic single module on stable core APIs; pinned versions; documented Docker ops + backups; plan upgrade path per major release. | Architect |
 
 ### 2.3 Security & Compliance
 
 | ID | Risk | L | I | Score | Sev | Mitigation | Owner |
 |----|------|---|---|-------|-----|-----------|-------|
 | RSK-04 | **Fraud / cash theft** if controls circumvented operationally. | 3 | 5 | 15 | High | Four-eyes enforcement, deposit tracking, variance escalation, immutable audit, anomaly review (R-23), access reviews. | CFO / Internal Audit |
-| RSK-10 | Credential compromise / weak auth. | 2 | 5 | 10 | Med | MFA for finance/admin, rate-limiting, short token TTL, session hardening. | Tech Lead |
-| RSK-11 | Data breach / privacy (DPDP). | 2 | 5 | 10 | Med | Encryption in transit/rest, least-data, signed URLs, India region, pen-test before go-live. | Security |
-| RSK-16 | Audit-trail tampering. | 1 | 5 | 5 | Low | Append-only log, revoked delete grants, hash-chaining option. | Tech Lead |
+| RSK-10 | Credential compromise / weak auth. | 2 | 5 | 10 | Med | 2FA (`auth_totp`) for finance/admin, login rate-limiting (nginx), session hardening, no self-signup. | Tech Lead |
+| RSK-11 | Data breach / privacy (DPDP). | 2 | 5 | 10 | Med | Encryption in transit/rest, least-data, no public file URLs (attachment access control), India region, pen-test before go-live. | Security |
+| RSK-16 | Audit-trail tampering. | 1 | 5 | 5 | Low | Append-only `bcms.audit.log` (no write/unlink rights) + chatter, hash-chaining option. | Tech Lead |
 
 ### 2.4 Operational & Adoption
 
@@ -76,7 +77,7 @@ Severity bands: **Low** ≤6 · **Medium** 8–12 · **High** ≥15.
 | Rank | ID | Risk | Score |
 |------|----|------|-------|
 | 1 | RSK-01 | Scope creep from BRD ambiguity | 16 |
-| 2 | RSK-03 | RLS data-isolation failure | 15 |
+| 2 | RSK-03 | Record-rule data-isolation failure | 15 |
 | 2 | RSK-04 | Fraud / cash theft | 15 |
 | 2 | RSK-08 | Financial calculation bugs | 15 |
 | 5 | RSK-02 | Tally reconciliation gap | 12 |
@@ -94,7 +95,7 @@ Each open clarification ([Assumptions.md](./Assumptions.md)) is itself a risk un
 ## 5. Monitoring & Review
 
 - Risks reviewed at each sprint/phase gate; scores updated; new risks logged.
-- Security risks re-tested each release (RLS suite, negative authz tests, pen-test pre-go-live).
+- Security risks re-tested each release (record-rule suite, negative authz tests, pen-test pre-go-live).
 - Operational risks tracked via the Exception dashboard (variances, overdue deposits/closings) once live.
 
 ---

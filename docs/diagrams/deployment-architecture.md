@@ -5,15 +5,16 @@
 ```mermaid
 graph TB
     Dev["Developer"] -->|push PR| GH["GitHub"]
-    GH -->|CI: lint, test, typecheck| CI["GitHub Actions"]
-    CI -->|preview deploy| VPrev["Vercel Preview"]
-    CI -->|migrations| SBstg["Supabase Staging"]
+    GH -->|"CI: flake8 + pylint-odoo"| CI["GitHub Actions"]
+    CI -->|"odoo --test-enable (throwaway PG)"| T["Test run"]
+    CI -->|build image| IMG["Docker image (GHCR)"]
     GH -->|merge main| CD["GitHub Actions (CD)"]
-    CD -->|deploy| VProd["Vercel Production"]
-    CD -->|db migrate + functions| SBprod["Supabase Production"]
-    SBprod --> Mon["Sentry + Uptime + Supabase Logs"]
-    VProd --> Users["Branch Staff (Web/Mobile)"]
-    Users --> VProd
+    CD -->|deploy compose + pull image| STG["Staging (DB: staging)"]
+    STG -->|UAT sign-off| PROD["Production (DB: prod)"]
+    PROD -->|"upgrade -u branch_cash_management"| PROD
+    PROD --> Mon["Server logs + Sentry + Uptime"]
+    PROD --> Users["Branch Staff (Web/Mobile)"]
+    Users --> PROD
 ```
 
 ## Physical topology
@@ -21,25 +22,20 @@ graph TB
 ```mermaid
 graph TB
     User["Branch Staff Devices"]
-    subgraph CDN["Vercel Global Edge"]
-        V["Next.js SSR/RSC + static"]
+    subgraph Host["VPS / Server (India region)"]
+        subgraph Docker["Docker Compose"]
+            NG["nginx (TLS, proxy, gzip, static cache)"]
+            ODOO["odoo (19 CE) — gevent + workers"]
+            PGC[("postgres:16")]
+        end
+        VOL[["Volumes: filestore + PG data"]]
+        BKP["pg_dump + filestore backup (daily, offsite)"]
     end
-    subgraph Region["Supabase Region (ap-south-1 / ap-southeast-1)"]
-        LB["API Gateway (Kong)"]
-        AUTHN["GoTrue"]
-        PGREST["PostgREST"]
-        RTS["Realtime"]
-        FUNC["Edge Functions"]
-        OBJ["Storage"]
-        DBP[("Postgres primary")]
-        DBR[("Read replica (optional)")]
-        BKP["Backups / PITR"]
-    end
-    User -->|HTTPS/TLS| V --> LB
-    LB --> AUTHN & PGREST & RTS & FUNC & OBJ
-    PGREST --> DBP
-    FUNC --> DBP
-    RTS --> DBP
-    DBP --> DBR
-    DBP --> BKP
+    User -->|HTTPS/TLS| NG
+    NG -->|"proxy 8069 / longpoll 8072"| ODOO
+    ODOO --> PGC
+    ODOO --> VOL
+    PGC --> VOL
+    PGC --> BKP
+    VOL --> BKP
 ```

@@ -2,9 +2,10 @@
 
 **Project:** Branch Cash Management System (BCMS) — Prabal Motors Private Limited
 **Source:** `BRD_v1.0.docx` §6, §9–§14, §17
-**Version:** 1.0 · **Date:** 2026-07-01 · **Status:** Draft for Client Review
+**Platform:** Odoo 19 Community Edition — module `branch_cash_management`
+**Version:** 2.0 · **Date:** 2026-07-03 · **Status:** Draft for Client Review
 
-> Phase 6 deliverable. Every business process from the BRD is documented here with narrative + Mermaid diagrams. The **canonical single-diagram files** live in [docs/diagrams/](./diagrams/) and are indexed in [MermaidDiagrams.md](./MermaidDiagrams.md). Diagram types used: flowchart, sequence, activity, state, decision tree, approval, escalation, exception/error, swimlane, data-flow, and user-journey.
+> Every business process from the BRD is documented here with narrative + Mermaid diagrams. The **canonical single-diagram files** live in [docs/diagrams/](./diagrams/) and are indexed in [MermaidDiagrams.md](./MermaidDiagrams.md). Diagram types used: flowchart, sequence, activity, state, decision tree, approval, escalation, exception/error, swimlane, data-flow, and user-journey.
 
 **Module coverage:** Collection Request · Cashier Verification · Receipt · Cash Closing · Approval · Expense · Deposit · Accounting · Notifications · Auth/Access · Dashboards/Reports (data flow).
 
@@ -69,7 +70,7 @@ flowchart LR
 ```mermaid
 flowchart TD
     S([Start]) --> F["Enter customer, reference (invoice/job card), amount, expected mode"]
-    F --> V{"All mandatory fields valid? (Zod)"}
+    F --> V{"All mandatory fields valid? (constraints)"}
     V -->|No| F
     V -->|Yes| U{"Mandatory document uploaded?"}
     U -->|No| F
@@ -124,25 +125,24 @@ flowchart TD
 
 ## 4. Receipt Generation (BRD §9)
 
-**Actors:** Cashier. **Rules:** BR-08 (unique sequential immutable), FR-RCPT-01…05. Issued atomically via the `issue-receipt` Edge Function (idempotent).
+**Actors:** Cashier. **Rules:** BR-08 (unique sequential immutable), FR-RCPT-01…05. Issued atomically via the `action_issue_receipt` model method (state-guarded).
 
 ```mermaid
 sequenceDiagram
     participant C as Cashier
-    participant N as Next.js
-    participant EF as EF: issue-receipt
-    participant DB as Postgres
-    C->>N: Generate receipt (requestId)
-    N->>EF: POST /receipts (Idempotency-Key)
-    EF->>DB: BEGIN txn
-    EF->>DB: validate request = accepted
-    EF->>DB: fn_next_number(branch,'RCPT') -> receipt_no
-    EF->>DB: insert receipt + payment_detail
-    EF->>DB: request.status = receipted
-    EF->>DB: audit_log
-    EF->>DB: COMMIT
-    EF-->>N: 201 {receiptNo}
-    N-->>C: Show/print receipt (PDF)
+    participant W as Odoo Web Client
+    participant M as action_issue_receipt (method)
+    participant DB as PostgreSQL (via ORM)
+    C->>W: click "Issue Receipt" (requestId)
+    W->>M: call method (request record)
+    M->>M: guard: state == accepted, maker rules
+    M->>DB: ir.sequence next_by_code('bcms.receipt') -> name
+    M->>DB: create bcms.receipt + payment lines (same txn)
+    M->>DB: request.state = 'receipted'
+    M->>DB: bcms.audit.log entry
+    Note over M,DB: one request transaction (atomic)
+    M-->>W: open receipt form (act_window)
+    W-->>C: view / print QWeb PDF
 ```
 
 Canonical: [diagrams/receipt-sequence.md](./diagrams/receipt-sequence.md)
@@ -277,22 +277,21 @@ Canonical: [diagrams/accounting-flow.md](./diagrams/accounting-flow.md)
 
 ## 10. Authentication & Authorization (BRD §18)
 
-**Auth flow:** [diagrams/auth-flow.md](./diagrams/auth-flow.md) · **Authorization (RLS + maker-checker):** [diagrams/authorization-flow.md](./diagrams/authorization-flow.md). Diagrams are in [SecurityArchitecture.md](./SecurityArchitecture.md) §2–§3 and the canonical files.
+**Auth flow:** [diagrams/auth-flow.md](./diagrams/auth-flow.md) · **Authorization (record rules + maker-checker):** [diagrams/authorization-flow.md](./diagrams/authorization-flow.md). Diagrams are in [SecurityArchitecture.md](./SecurityArchitecture.md) §2–§3 and the canonical files.
 
 ---
 
 ## 11. Notifications (BRD §17)
 
-**Triggers:** rejected request, pending approval, pending closing, pending deposit, accounting pending. Delivered in-app via Realtime; role/scope-targeted. **Requirements:** FR-NOTIF-01…06.
+**Triggers:** rejected request, pending approval, pending closing, pending deposit, accounting pending. Delivered in-app via Odoo activities/chatter (bus); role/scope-targeted. **Requirements:** FR-NOTIF-01…06.
 
 ```mermaid
 flowchart LR
-    T["Workflow transition<br/>(reject/submit/pending)"] --> EF["EF: notify-dispatch"]
-    EF --> RES["Resolve recipients by role + scope"]
-    RES --> INS[("insert notification rows")]
-    INS --> RT["Supabase Realtime → recipient devices"]
-    RT --> UI["In-app bell + unread badge"]
-    INS -.->|Phase 4| EXT["WhatsApp / Email / SMS"]
+    T["Workflow transition<br/>(reject/submit/pending)"] --> M["Model method:<br/>activity_schedule / message_post"]
+    M --> RES["Resolve recipient(s) by group + record-rule scope"]
+    RES --> ACT[("mail.activity + mail.message")]
+    ACT --> UI["Systray: activity clock + unread badge (bus)"]
+    ACT -.->|optional / Phase 4| EXT["Email (mail.template) / WhatsApp / SMS"]
 ```
 
 Canonical: [diagrams/notification-flow.md](./diagrams/notification-flow.md)
@@ -306,18 +305,18 @@ Canonical: [diagrams/notification-flow.md](./diagrams/notification-flow.md)
 ```mermaid
 sequenceDiagram
     participant U as User
-    participant N as Next.js
-    participant ST as Supabase Storage
-    participant DB as Postgres (document)
-    U->>N: choose file (PDF/JPG/PNG ≤10MB)
-    N->>N: validate type/size (magic bytes)
-    N->>ST: upload to private bucket (branch/entity/uuid)
-    ST-->>N: object path
-    N->>DB: insert document (version+1, is_current=true)
-    DB->>DB: set prior version is_current=false
-    U->>N: view file
-    N->>ST: request short-lived signed URL (scoped)
-    ST-->>U: file via signed URL
+    participant OD as Odoo Server
+    participant FS as Filestore (private volume)
+    participant DB as PostgreSQL (ir.attachment)
+    U->>OD: choose file (PDF/JPG/PNG ≤10MB) on the record
+    OD->>OD: validate type/size (magic bytes, max upload size)
+    OD->>FS: store file bytes (checksum-addressed)
+    FS-->>OD: store reference
+    OD->>DB: create ir.attachment (res_model/res_id, version current)
+    DB->>DB: mark prior version superseded (BR-13)
+    U->>OD: view file
+    OD->>OD: check parent record-rule scope + access token
+    OD-->>U: stream attachment (no public URL)
 ```
 
 Canonical: [diagrams/file-storage-flow.md](./diagrams/file-storage-flow.md)
@@ -354,15 +353,15 @@ flowchart LR
 
 ```mermaid
 flowchart TD
-    R([API request]) --> V{"Valid (Zod)?"}
-    V -->|No| E422["422 VALIDATION_ERROR (field details)"]
-    V -->|Yes| AZ{"Authorized (RLS/role/scope)?"}
-    AZ -->|No| E403["403 FORBIDDEN_SCOPE / MAKER_CHECKER_VIOLATION (audited)"]
+    R([create / write / action_* call]) --> V{"Fields & @api.constrains valid?"}
+    V -->|No| E422["ValidationError (field-level, rolled back)"]
+    V -->|Yes| AZ{"Authorized (ACL + record rule + group)?"}
+    AZ -->|No| E403["AccessError: FORBIDDEN_SCOPE / MAKER_CHECKER_VIOLATION (audited)"]
     AZ -->|Yes| ST{"Valid state transition?"}
-    ST -->|No| E409["409 INVALID_STATE_TRANSITION"]
-    ST -->|Yes| TX{"DB txn ok?"}
-    TX -->|No| E500["500 INTERNAL_ERROR (rollback, alert Sentry)"]
-    TX -->|Yes| OK["200/201 success + audit"]
+    ST -->|No| E409["UserError: INVALID_STATE_TRANSITION"]
+    ST -->|Yes| TX{"Transaction commits?"}
+    TX -->|No| E500["Exception → rollback + Sentry alert"]
+    TX -->|Yes| OK["Success + bcms.audit.log + activity"]
 ```
 
 Canonical: [diagrams/exception-handling-flow.md](./diagrams/exception-handling-flow.md), [diagrams/escalation-flow.md](./diagrams/escalation-flow.md), [diagrams/error-flow.md](./diagrams/error-flow.md)
@@ -374,12 +373,12 @@ Canonical: [diagrams/exception-handling-flow.md](./diagrams/exception-handling-f
 ```mermaid
 flowchart LR
     subgraph Inputs
-        ADV[Advisor] --> CR[(collection_request)]
-        CASH[Cashier] --> RCPT[(receipt)]
-        CASH --> EXP[(cash_expense)]
-        CASH --> DEP[(bank_deposit)]
-        CASH --> CLS[(cash_closing)]
-        BA[Accountant] --> ACC[(accounting_status)]
+        ADV[Advisor] --> CR[(bcms.collection.request)]
+        CASH[Cashier] --> RCPT[(bcms.receipt)]
+        CASH --> EXP[(bcms.expense)]
+        CASH --> DEP[(bcms.deposit)]
+        CASH --> CLS[(bcms.cash.closing)]
+        BA[Accountant] --> ACC[(bcms.accounting.status)]
     end
     CR --> RCPT
     RCPT --> CLS
@@ -387,9 +386,9 @@ flowchart LR
     DEP --> CLS
     CLS --> ACC
     subgraph Outputs
-        VIEWS[[Reporting Views]] --> RPT[Reports]
+        VIEWS[[read_group / pivot / graph]] --> RPT[Reports]
         VIEWS --> DASH[Dashboards]
-        AUDIT[(audit_log)] --> COMP[Compliance/Audit]
+        AUDIT[(bcms.audit.log)] --> COMP[Compliance/Audit]
     end
     CR --> VIEWS
     RCPT --> VIEWS

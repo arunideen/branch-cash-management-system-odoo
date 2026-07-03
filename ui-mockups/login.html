@@ -3,79 +3,40 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Sign in — BCMS</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/styles.css">
+  <title>Login — Branch Cash Management (Odoo 19 CE)</title>
+  <link rel="stylesheet" href="assets/odoo.css">
   <style>
-    body { min-height: 100vh; display: grid; grid-template-columns: 1.05fr .95fr; }
-    .promo { background: linear-gradient(160deg,#0B1220 0%,#1E1B4B 60%,#312E81 100%); color: #E2E8F0; padding: 56px 60px; display: flex; flex-direction: column; }
-    .promo .logo { width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(135deg,#4F46E5,#6366F1); display: grid; place-items: center; color: #fff; font-weight: 700; font-size: 24px; box-shadow: 0 8px 24px rgba(79,70,229,.5); }
-    .promo h2 { font-size: 30px; color: #fff; margin: auto 0 16px; letter-spacing: -.5px; line-height: 1.25; }
-    .promo p { color: #A5B4FC; font-size: 15px; max-width: 420px; }
-    .promo ul { list-style: none; padding: 0; margin: 28px 0 0; display: grid; gap: 14px; }
-    .promo li { display: flex; gap: 12px; align-items: center; color: #CBD5E1; font-size: 14px; }
-    .promo li .tick { width: 26px; height: 26px; border-radius: 8px; background: rgba(16,185,129,.15); color: #6EE7B7; display: grid; place-items: center; flex: none; }
-    .promo .foot { color: #64748B; font-size: 12px; margin-top: 40px; }
-    .auth { display: grid; place-items: center; padding: 40px; background: var(--bg); }
-    .auth-card { width: 100%; max-width: 388px; }
-    .auth-card h1 { font-size: 24px; margin: 0 0 6px; }
-    .auth-card .sub { color: var(--muted); margin: 0 0 28px; }
-    .mfa-inputs { display: flex; gap: 10px; }
-    .mfa-inputs input { width: 100%; text-align: center; font-size: 20px; font-weight: 700; padding: 12px 0; border: 1px solid var(--border-2); border-radius: 10px; font-family: var(--font); }
-    .mfa-inputs input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-100); }
-    .auth-foot { text-align: center; color: var(--muted); font-size: 12.5px; margin-top: 22px; }
-    @media (max-width: 880px){ body { grid-template-columns: 1fr; } .promo { display: none; } }
+    body{background:#f4f2f4;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px}
+    .lg-card{background:#fff;border:1px solid var(--o-border-2);border-radius:10px;box-shadow:0 6px 30px rgba(0,0,0,.10);width:100%;max-width:360px;padding:26px 28px}
+    .lg-logo{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:16px}
+    .lg-logo .m{width:40px;height:40px;border-radius:9px;background:var(--o-primary);color:#fff;display:grid;place-items:center;font-weight:700;font-size:20px}
+    .lg-logo b{font-size:17px;color:var(--o-text-strong)}
+    .lg-db{display:flex;align-items:center;gap:6px;justify-content:center;font-size:12px;color:var(--o-muted);margin-bottom:18px}
+    .lg-db svg{width:13px;height:13px}
+    .lg-field{margin-bottom:14px}
+    .lg-field label{display:block;font-size:12px;color:var(--o-label);font-weight:600;margin-bottom:5px}
+    .lg-field input{width:100%;border:1px solid var(--o-border);border-radius:5px;padding:9px 10px;font-size:14px;color:var(--o-text)}
+    .lg-field input:focus{outline:0;border-color:var(--o-primary);box-shadow:0 0 0 2px var(--o-primary-light)}
+    .lg-btn{width:100%;background:var(--o-primary);color:#fff;border:0;border-radius:5px;padding:10px;font-size:14px;font-weight:600;cursor:pointer;margin-top:4px}
+    .lg-btn:hover{background:var(--o-primary-dark)}
+    .lg-links{display:flex;justify-content:space-between;margin-top:14px;font-size:12px}
+    .lg-foot{margin-top:22px;color:#9aa0a6;font-size:12px;text-align:center}
+    .lg-foot b{color:var(--o-primary)}
   </style>
 </head>
 <body>
-  <div class="promo">
-    <div class="logo">₹</div>
-    <h2>Branch Cash<br>Management System</h2>
-    <p>Standardised, auditable branch cash operations across Sales & Service — collection to Tally, with a complete audit trail.</p>
-    <ul>
-      <li><span class="tick" data-icon="check"></span> Role-based access across 9 roles & branch scope</li>
-      <li><span class="tick" data-icon="shield"></span> Maker–checker approvals on every money movement</li>
-      <li><span class="tick" data-icon="receipt"></span> Immutable receipts & tamper-evident audit log</li>
-    </ul>
-    <div class="foot">© 2026 Prabal Motors Private Limited · BCMS v1.0 (demo)</div>
+  <div class="lg-card">
+    <div class="lg-logo"><div class="m">₹</div><b>Branch&nbsp;Cash</b></div>
+    <div class="lg-db" data-svg="db">&nbsp;Database: <b style="color:var(--o-text)">&nbsp;prabal-bcms</b></div>
+    <form onsubmit="event.preventDefault();location.href='dashboard.html'">
+      <div class="lg-field"><label>Email</label><input type="email" value="priya.nair@prabalmotors.in" autocomplete="username"></div>
+      <div class="lg-field"><label>Password</label><input type="password" value="············" autocomplete="current-password"></div>
+      <button class="lg-btn" type="submit">Log in</button>
+      <div class="lg-links"><a href="#">Reset Password</a><span class="muted">2FA enabled</span></div>
+    </form>
+    <div class="lg-foot">Powered by <b>Odoo</b> 19 Community Edition · <a href="#">Manage Databases</a></div>
   </div>
-
-  <div class="auth">
-    <div class="auth-card">
-      <div class="card card-pad">
-        <h1>Welcome back</h1>
-        <p class="sub">Sign in to your branch workspace</p>
-
-        <div class="field mb-2">
-          <label>Work email <span class="req">*</span></label>
-          <input class="input" type="email" value="priya.nair@prabalmotors.in">
-        </div>
-        <div class="field mb-2">
-          <label>Password <span class="req">*</span></label>
-          <input class="input" type="password" value="••••••••••">
-        </div>
-        <div class="flex justify-between items-center mb-2">
-          <label class="small flex items-center gap-1" style="font-weight:500;color:var(--muted)"><input type="checkbox" checked> Remember this device</label>
-          <a class="small" href="#">Forgot password?</a>
-        </div>
-
-        <div class="alert alert-info mb-2" style="font-size:12.5px">
-          <span data-icon="shield"></span>
-          <div><b>Two-factor step</b> — enter the 6-digit code from your authenticator app.</div>
-        </div>
-        <div class="mfa-inputs mb-3">
-          <input maxlength="1" value="4"><input maxlength="1" value="8"><input maxlength="1" value="1">
-          <input maxlength="1" value="2"><input maxlength="1" value="9"><input maxlength="1" value="0">
-        </div>
-
-        <a class="btn btn-primary btn-block" href="dashboard.html">Sign in securely</a>
-        <p class="auth-foot">Protected by TLS 1.2+ · Sessions expire after inactivity.<br>Trouble signing in? Contact your branch admin.</p>
-      </div>
-      <p class="auth-foot"><a href="index.html">← Back to mockup index</a></p>
-    </div>
-  </div>
-
-  <script src="assets/app.js"></script>
+  <p style="color:#9aa0a6;font-size:12px;margin-top:18px">Branch Cash Management System · Prabal Motors Pvt. Ltd. · <a href="index.html">mockup index</a></p>
+  <script src="assets/odoo.js"></script>
 </body>
 </html>

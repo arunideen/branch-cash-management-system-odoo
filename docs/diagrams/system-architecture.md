@@ -6,37 +6,41 @@
 graph TB
     subgraph Clients["Client Devices"]
         Web["Web Browser (Desktop)"]
-        Mobile["Mobile Browser / PWA"]
+        Mobile["Mobile Browser (responsive)"]
     end
-    subgraph Edge["Vercel Edge / CDN"]
-        Next["Next.js App Router (RSC + Route Handlers)"]
+    subgraph Edge["Reverse Proxy"]
+        NGINX["nginx (TLS, static cache, longpolling)"]
     end
-    subgraph Supabase["Supabase (Managed Cloud)"]
-        Auth["Auth (GoTrue) + Claims Hook"]
-        REST["PostgREST Auto REST API"]
-        RT["Realtime Server"]
-        EF["Edge Functions (Deno/TS)"]
-        ST["Storage (S3-compatible)"]
-        PG[("PostgreSQL + RLS + pg_cron")]
+    subgraph Server["Odoo 19 CE Server"]
+        WEB["Web Client (OWL) + Controllers"]
+        subgraph MOD["branch_cash_management (custom module)"]
+            MODELS["ORM Models (business logic + constraints)"]
+            SEC["Security (groups, record rules, ACLs)"]
+            VIEWS["Views / Menus / Actions"]
+            REPORT["QWeb Reports"]
+            CRON["Scheduled Actions (ir.cron)"]
+        end
+        CORE["Odoo Core (base, mail, web)"]
+        ORM["ORM"]
     end
+    PG[("PostgreSQL (system of record)")]
+    FS[["Filestore (ir.attachment)"]]
     subgraph External["External (Phase 4)"]
         Tally["Tally API"]
         BankAPI["Bank / CIT API"]
         Notify["WhatsApp/Email"]
     end
-    Web --> Next
-    Mobile --> Next
-    Next -->|"@supabase/ssr"| Auth
-    Next -->|"REST (RLS)"| REST
-    Next -->|"subscribe"| RT
-    Next -->|"invoke"| EF
-    Next -->|"signed URLs"| ST
-    Auth --> PG
-    REST --> PG
-    RT --> PG
-    EF --> PG
-    EF -.-> Tally
-    EF -.-> BankAPI
-    EF -.-> Notify
-    ST --> PG
+    Web --> NGINX
+    Mobile --> NGINX
+    NGINX --> WEB
+    WEB --> MODELS
+    MODELS --> SEC
+    MODELS --> ORM
+    CORE --> ORM
+    ORM --> PG
+    MODELS --> FS
+    CRON --> MODELS
+    MODELS -.-> Tally
+    BankAPI -.-> MODELS
+    MODELS -.-> Notify
 ```

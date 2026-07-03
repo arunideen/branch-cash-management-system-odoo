@@ -2,7 +2,8 @@
 
 **Client:** Prabal Motors Private Limited (PMPL)
 **Source:** `BRD_v1.0.docx` — Comprehensive Business Requirements Document, v1.0
-**Documentation Version:** 1.0 · **Date:** 2026-07-01 · **Status:** Draft for Client Review / Sign-off
+**Platform:** Odoo 19 Community Edition — one fully custom module (`branch_cash_management`)
+**Documentation Version:** 2.0 · **Date:** 2026-07-03 · **Status:** Draft for Client Review / Sign-off
 
 ---
 
@@ -14,7 +15,7 @@ This `docs/` folder is the complete **business, technical, and architectural ana
 
 ## 2. The product in one paragraph
 
-BCMS digitises PMPL's branch cash lifecycle — **collection request → cashier verification → official receipt → cash expense → end-of-day closing → maker-checker approval → bank deposit → Tally accounting** — across a multi-branch Sales & Service network, under **role-based access, complete immutable audit trail, and no-physical-delete** controls, surfaced through **branch/state/corporate dashboards** and operational reports. It is a responsive **web/mobile** app on **Next.js + Supabase**. Tally/bank/WhatsApp/BI/OCR integrations are **future** enhancements.
+BCMS digitises PMPL's branch cash lifecycle — **collection request → cashier verification → official receipt → cash expense → end-of-day closing → maker-checker approval → bank deposit → Tally accounting** — across a multi-branch Sales & Service network, under **role-based access, complete immutable audit trail, and no-physical-delete** controls, surfaced through **branch/state/corporate dashboards** and operational reports. It is built as **one fully custom Odoo 19 Community Edition module** (`branch_cash_management`) — custom ORM models with security groups + record rules, the Odoo backend UI, `ir.attachment` documents, `ir.sequence` numbering, chatter/activity notifications, and QWeb reports. Tally/bank/WhatsApp/BI/OCR integrations are **future** enhancements.
 
 ---
 
@@ -42,11 +43,11 @@ BCMS digitises PMPL's branch cash lifecycle — **collection request → cashier
 ### 3.3 Architecture & Design
 | Document | Purpose |
 |----------|---------|
-| [TechnicalArchitecture.md](./TechnicalArchitecture.md) | Stack, system/logical/physical/component/module/deployment/integration architecture. |
-| [DatabaseDesign.md](./DatabaseDesign.md) | Supabase schema: tables, RLS, triggers, views, functions, soft-delete. |
-| [APIDesign.md](./APIDesign.md) | REST + Edge Functions: endpoints, validation, errors, rate limits, pagination. |
-| [SecurityArchitecture.md](./SecurityArchitecture.md) | AuthN/Z, JWT/RLS, OWASP Top 10, encryption, audit, monitoring. |
-| [UIUX.md](./UIUX.md) | Sitemap, screens, wireframes, dashboards, responsive, a11y, design system. |
+| [TechnicalArchitecture.md](./TechnicalArchitecture.md) | Odoo 19 CE stack, module structure, system/logical/physical/component/deployment/integration architecture. |
+| [DatabaseDesign.md](./DatabaseDesign.md) | Odoo data model: models & fields, `_sql_constraints`, computed/stored fields, `@api.constrains`, `ir.sequence`, `active` soft-delete. |
+| [APIDesign.md](./APIDesign.md) | Application interfaces: ORM methods & `action_*` transitions, External API (XML-RPC/JSON-RPC), controllers, validation, errors. |
+| [SecurityArchitecture.md](./SecurityArchitecture.md) | Odoo AuthN/Z: groups, `ir.model.access.csv`, record rules (`ir.rule`), 2FA/SSO, OWASP Top 10, encryption, audit, monitoring. |
+| [UIUX.md](./UIUX.md) | Menu/action map, Odoo views (list/form/kanban/pivot/graph), OWL dashboards, responsive, a11y, theming. |
 
 ### 3.4 Workflows & Diagrams
 | Document | Purpose |
@@ -102,7 +103,7 @@ The four **High-priority** clarifications gate confident scoping ([Assumptions.m
 | ✅ | Every module has acceptance criteria | [UserStories.md](./UserStories.md) Given/When/Then per story |
 | ✅ | Every workflow has a diagram | 30 diagrams in [diagrams/](./diagrams/) |
 | ✅ | PRD & SOW sign-off ready | [PRD.md](./PRD.md), [SOW.md](./SOW.md) with sign-off blocks |
-| ✅ | Enterprise architecture | Clean/modular/SOLID, RLS, maker-checker, audit — [TechnicalArchitecture.md](./TechnicalArchitecture.md), [SecurityArchitecture.md](./SecurityArchitecture.md) |
+| ✅ | Enterprise architecture | Modular Odoo design, security groups + record rules, maker-checker, audit — [TechnicalArchitecture.md](./TechnicalArchitecture.md), [SecurityArchitecture.md](./SecurityArchitecture.md) |
 | ✅ | Recommendations marked separately | *Recommended (R-*)* / *(derived)* throughout, esp. [BusinessAnalysis.md](./BusinessAnalysis.md) §6 |
 
 **Deliverables:** 18 documents + 30 diagram files = 48 files.

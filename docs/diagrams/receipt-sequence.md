@@ -5,18 +5,17 @@
 ```mermaid
 sequenceDiagram
     participant C as Cashier
-    participant N as Next.js
-    participant EF as EF: issue-receipt
-    participant DB as Postgres
-    C->>N: Generate receipt (requestId)
-    N->>EF: POST /receipts (Idempotency-Key)
-    EF->>DB: BEGIN txn
-    EF->>DB: validate request = accepted
-    EF->>DB: fn_next_number(branch,'RCPT') -> receipt_no
-    EF->>DB: insert receipt + payment_detail
-    EF->>DB: request.status = receipted
-    EF->>DB: audit_log
-    EF->>DB: COMMIT
-    EF-->>N: 201 {receiptNo}
-    N-->>C: Show/print receipt (PDF)
+    participant W as Odoo Web Client
+    participant M as action_issue_receipt (model method)
+    participant DB as PostgreSQL (via ORM)
+    C->>W: click "Issue Receipt" (on accepted request)
+    W->>M: call method (request record)
+    M->>M: guard: state == accepted, maker rules
+    M->>DB: ir.sequence next_by_code('bcms.receipt') → name
+    M->>DB: create bcms.receipt + payment lines (same txn)
+    M->>DB: request.state = 'receipted'
+    M->>DB: bcms.audit.log entry
+    Note over M,DB: all within one request transaction (atomic)
+    M-->>W: open receipt form (act_window)
+    W-->>C: view / print QWeb PDF
 ```

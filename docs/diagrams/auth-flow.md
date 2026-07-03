@@ -5,14 +5,13 @@
 ```mermaid
 sequenceDiagram
     participant U as User
-    participant FE as Next.js (@supabase/ssr)
-    participant GT as GoTrue
-    participant HK as Access-Token Hook
-    U->>FE: email + password (+ TOTP if enabled)
-    FE->>GT: POST /token?grant_type=password
-    GT->>GT: verify credentials, MFA, rate-limit
-    GT->>HK: enrich token (role, branch_id, cluster_id, state_id)
-    HK-->>GT: custom app_metadata claims
-    GT-->>FE: access JWT (~1h) + refresh token (httpOnly cookie)
-    FE-->>U: authenticated session (role-scoped UI)
+    participant NG as nginx (TLS)
+    participant OD as Odoo (res.users / auth)
+    participant DB as PostgreSQL
+    U->>NG: email + password (+ TOTP if enabled)
+    NG->>OD: POST /web/login
+    OD->>DB: verify credentials (PBKDF2), 2FA, rate-limit
+    DB-->>OD: user + groups + branch/cluster/state scope
+    OD->>OD: build server-side session
+    OD-->>U: session cookie (httpOnly, Secure, SameSite=Lax) — role-scoped UI
 ```

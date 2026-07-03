@@ -3,142 +3,117 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Admin Masters — BCMS</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/styles.css">
+  <title>Configuration — Branch Cash (Odoo 19 CE)</title>
+  <link rel="stylesheet" href="assets/odoo.css">
 </head>
-<body data-page="masters" data-role="CFO / Admin" data-user="Neha Kapoor">
-  <main class="content">
-    <div class="breadcrumb"><span>Administration</span><span class="sep">/</span><b>Masters</b></div>
-    <div class="page-head">
-      <div class="titles">
-        <h1>Master data</h1>
-        <p>Reference data used across the system. Records are <b>soft-deleted</b> only — nothing is physically removed <span class="muted">(BR-05)</span>.</p>
-      </div>
-      <div class="actions">
-        <button class="btn btn-primary" data-open-modal="newMaster" data-icon="plus">Add record</button>
-      </div>
-    </div>
+<body class="o-app" data-menu="config" data-user="Neha Kapoor" data-role="CFO / Admin">
 
-    <div class="tabs" data-tabs>
-      <button class="on" data-tab="branches">Branches</button>
-      <button data-tab="customers">Customers</button>
-      <button data-tab="heads">Expense Heads</button>
-      <button data-tab="banks">Bank Accounts</button>
-      <button data-tab="agencies">Pickup Agencies</button>
-    </div>
-
-    <!-- BRANCHES -->
-    <div class="tab-panel on" data-panel="branches">
-      <div class="card">
-        <div class="card-head"><div><h3>Branches</h3><p>4 active · scope hierarchy Branch → Cluster → State → Corporate</p></div>
-          <div class="actions"><div class="search-inline"><span data-icon="search" style="font-size:0"></span><input placeholder="Search branches"></div></div>
-        </div>
-        <div class="table-wrap">
-          <table class="tbl">
-            <thead><tr><th>Code</th><th>Branch</th><th>Cluster</th><th>Vertical</th><th>Cashiers</th><th>Status</th><th class="th-right">Actions</th></tr></thead>
-            <tbody>
-              <tr><td><span class="ref-code">AND</span></td><td><b>Andheri (Service)</b><br><small class="muted">Mumbai West</small></td><td>Mumbai West</td><td><span class="badge badge-sky">Service</span></td><td class="num">3</td><td><span class="badge badge-emerald"><span class="bdot"></span>Active</span></td><td class="td-right"><button class="btn btn-ghost btn-sm" data-icon="edit">Edit</button></td></tr>
-              <tr><td><span class="ref-code">BND</span></td><td><b>Bandra (Sales)</b><br><small class="muted">Mumbai West</small></td><td>Mumbai West</td><td><span class="badge badge-indigo">Sales</span></td><td class="num">2</td><td><span class="badge badge-emerald"><span class="bdot"></span>Active</span></td><td class="td-right"><button class="btn btn-ghost btn-sm" data-icon="edit">Edit</button></td></tr>
-              <tr><td><span class="ref-code">THN</span></td><td><b>Thane (Sales & Service)</b><br><small class="muted">Mumbai East</small></td><td>Mumbai East</td><td><span class="badge badge-slate">Both</span></td><td class="num">4</td><td><span class="badge badge-emerald"><span class="bdot"></span>Active</span></td><td class="td-right"><button class="btn btn-ghost btn-sm" data-icon="edit">Edit</button></td></tr>
-              <tr style="opacity:.6"><td><span class="ref-code">PNL</span></td><td><b>Panvel (Service)</b><br><small class="muted">Raigad</small></td><td>Raigad</td><td><span class="badge badge-sky">Service</span></td><td class="num">1</td><td><span class="badge badge-slate"><span class="bdot"></span>Inactive</span></td><td class="td-right"><button class="btn btn-ghost btn-sm">Restore</button></td></tr>
-            </tbody>
-          </table>
-        </div>
+  <div class="o-cp">
+    <div class="o-cp-top">
+      <div class="o-cp-actions">
+        <button class="btn btn-primary btn-sm" data-open="newDlg" data-svg="plus">New</button>
+        <div class="o-breadcrumb"><b>Configuration</b></div>
       </div>
-    </div>
-
-    <!-- CUSTOMERS -->
-    <div class="tab-panel" data-panel="customers">
-      <div class="card">
-        <div class="card-head"><div><h3>Customers</h3><p>Shared customer directory</p></div>
-          <div class="actions"><div class="search-inline"><span data-icon="search" style="font-size:0"></span><input placeholder="Search name / mobile"></div></div>
-        </div>
-        <div class="table-wrap">
-          <table class="tbl">
-            <thead><tr><th>Customer</th><th>Mobile</th><th>Vehicle(s)</th><th>GSTIN</th><th class="th-right">Lifetime value</th><th class="th-right">Actions</th></tr></thead>
-            <tbody>
-              <tr><td class="cust"><div class="avatar">RS</div><b>Ramesh Sharma</b></td><td>98200 41290</td><td>MH02 CK 4821</td><td class="mono small">—</td><td class="money">₹2,84,500</td><td class="td-right"><button class="btn btn-ghost btn-sm" data-icon="edit">Edit</button></td></tr>
-              <tr><td class="cust"><div class="avatar">AV</div><b>Anil Verma</b></td><td>91670 22841</td><td>MH04 GT 1180</td><td class="mono small">27ABCDE1234F1Z5</td><td class="money">₹9,62,000</td><td class="td-right"><button class="btn btn-ghost btn-sm" data-icon="edit">Edit</button></td></tr>
-              <tr><td class="cust"><div class="avatar">MK</div><b>Meena Kulkarni</b></td><td>99303 71120</td><td>MH01 AB 9021</td><td class="mono small">—</td><td class="money">₹47,900</td><td class="td-right"><button class="btn btn-ghost btn-sm" data-icon="edit">Edit</button></td></tr>
-              <tr><td class="cust"><div class="avatar">SP</div><b>Suresh Patil</b></td><td>98925 10034</td><td>MH12 KL 3345</td><td class="mono small">—</td><td class="money">₹18,300</td><td class="td-right"><button class="btn btn-ghost btn-sm" data-icon="edit">Edit</button></td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- EXPENSE HEADS -->
-    <div class="tab-panel" data-panel="heads">
-      <div class="card">
-        <div class="card-head"><div><h3>Expense heads</h3><p>Used when raising cash expense vouchers · mapped to Tally ledgers</p></div></div>
-        <div class="table-wrap">
-          <table class="tbl">
-            <thead><tr><th>Code</th><th>Expense head</th><th>Tally ledger</th><th class="th-right">Approval limit</th><th>Status</th><th class="th-right">Actions</th></tr></thead>
-            <tbody>
-              <tr><td><span class="ref-code">EH-01</span></td><td>Housekeeping</td><td class="small">Indirect Exp · Housekeeping</td><td class="money">₹5,000</td><td><span class="badge badge-emerald"><span class="bdot"></span>Active</span></td><td class="td-right"><button class="btn btn-ghost btn-sm" data-icon="edit">Edit</button></td></tr>
-              <tr><td><span class="ref-code">EH-02</span></td><td>Vehicle fuel</td><td class="small">Indirect Exp · Fuel</td><td class="money">₹10,000</td><td><span class="badge badge-emerald"><span class="bdot"></span>Active</span></td><td class="td-right"><button class="btn btn-ghost btn-sm" data-icon="edit">Edit</button></td></tr>
-              <tr><td><span class="ref-code">EH-03</span></td><td>Equipment repair</td><td class="small">Repairs & Maint.</td><td class="money">₹25,000</td><td><span class="badge badge-emerald"><span class="bdot"></span>Active</span></td><td class="td-right"><button class="btn btn-ghost btn-sm" data-icon="edit">Edit</button></td></tr>
-              <tr><td><span class="ref-code">EH-04</span></td><td>Staff conveyance</td><td class="small">Conveyance</td><td class="money">₹2,000</td><td><span class="badge badge-emerald"><span class="bdot"></span>Active</span></td><td class="td-right"><button class="btn btn-ghost btn-sm" data-icon="edit">Edit</button></td></tr>
-              <tr><td><span class="ref-code">EH-05</span></td><td>Courier & postage</td><td class="small">Postage</td><td class="money">₹1,500</td><td><span class="badge badge-emerald"><span class="bdot"></span>Active</span></td><td class="td-right"><button class="btn btn-ghost btn-sm" data-icon="edit">Edit</button></td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- BANKS -->
-    <div class="tab-panel" data-panel="banks">
-      <div class="card">
-        <div class="card-head"><div><h3>Bank accounts</h3><p>Deposit destinations mapped per branch</p></div></div>
-        <div class="table-wrap">
-          <table class="tbl">
-            <thead><tr><th>Bank</th><th>Account no.</th><th>Type</th><th>Branch(es)</th><th>Status</th><th class="th-right">Actions</th></tr></thead>
-            <tbody>
-              <tr><td><b>HDFC Bank</b><br><small class="muted">Andheri West</small></td><td class="mono">••••4021</td><td>Current</td><td>Andheri (Service)</td><td><span class="badge badge-emerald"><span class="bdot"></span>Active</span></td><td class="td-right"><button class="btn btn-ghost btn-sm" data-icon="edit">Edit</button></td></tr>
-              <tr><td><b>ICICI Bank</b><br><small class="muted">Bandra Kurla</small></td><td class="mono">••••7788</td><td>Current</td><td>Bandra (Sales)</td><td><span class="badge badge-emerald"><span class="bdot"></span>Active</span></td><td class="td-right"><button class="btn btn-ghost btn-sm" data-icon="edit">Edit</button></td></tr>
-              <tr><td><b>Axis Bank</b><br><small class="muted">Thane West</small></td><td class="mono">••••1290</td><td>Current</td><td>Thane</td><td><span class="badge badge-emerald"><span class="bdot"></span>Active</span></td><td class="td-right"><button class="btn btn-ghost btn-sm" data-icon="edit">Edit</button></td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- AGENCIES -->
-    <div class="tab-panel" data-panel="agencies">
-      <div class="card">
-        <div class="card-head"><div><h3>Cash pickup agencies</h3><p>For pickup-type deposits</p></div></div>
-        <div class="table-wrap">
-          <table class="tbl">
-            <thead><tr><th>Agency</th><th>Contact</th><th>SLA</th><th>Branch(es)</th><th>Status</th><th class="th-right">Actions</th></tr></thead>
-            <tbody>
-              <tr><td><b>SecureCash Logistics</b></td><td>1800 22 4455</td><td>Same day, by 6 PM</td><td>Andheri, Bandra</td><td><span class="badge badge-emerald"><span class="bdot"></span>Active</span></td><td class="td-right"><button class="btn btn-ghost btn-sm" data-icon="edit">Edit</button></td></tr>
-              <tr><td><b>CMS Cash Services</b></td><td>022 4020 1100</td><td>Next-day pickup</td><td>Thane, Panvel</td><td><span class="badge badge-emerald"><span class="bdot"></span>Active</span></td><td class="td-right"><button class="btn btn-ghost btn-sm" data-icon="edit">Edit</button></td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <!-- Add record modal (generic) -->
-  <div class="modal-overlay" id="newMaster">
-    <div class="modal">
-      <div class="modal-head"><h3>Add master record</h3></div>
-      <div class="modal-body">
-        <div class="field mb-2"><label>Name <span class="req">*</span></label><input class="input" placeholder="e.g. Kandivali (Service)"></div>
-        <div class="field mb-2"><label>Code <span class="req">*</span></label><input class="input mono" placeholder="e.g. KND"></div>
-        <div class="field"><label>Cluster</label><select class="select"><option>Mumbai West</option><option>Mumbai East</option><option>Raigad</option></select></div>
-        <div class="alert alert-info mt-2"><span data-icon="info"></span><div>All master changes are captured in the audit log with your identity and timestamp.</div></div>
-      </div>
-      <div class="modal-foot">
-        <button class="btn btn-ghost" data-close-modal>Cancel</button>
-        <button class="btn btn-primary" data-close-modal>Save record</button>
+      <div class="o-cp-right">
+        <div class="o-search"><span data-svg="search"></span><input placeholder="Search..."></div>
       </div>
     </div>
   </div>
 
-  <script src="assets/app.js"></script>
+  <div class="o-content">
+    <div class="o-notebook" data-nb style="margin:0">
+      <div class="o-nb-tabs" style="padding:0 14px;background:#fff">
+        <button class="on" data-tab="branches">Branches</button>
+        <button data-tab="customers">Customers</button>
+        <button data-tab="heads">Expense Heads</button>
+        <button data-tab="banks">Bank Accounts</button>
+        <button data-tab="agencies">Pickup Agencies</button>
+      </div>
+
+      <!-- Branches -->
+      <div class="o-nb-page on" data-page="branches" style="padding:0">
+        <div class="o-list-wrap"><table class="o-list">
+          <thead><tr><th class="o-check">☐</th><th>Code</th><th>Branch</th><th>Cluster</th><th>State</th><th>Type</th><th class="r">Cashiers</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td class="o-check">☐</td><td class="o-cell-link">AND</td><td>Andheri (Service)</td><td>Mumbai West</td><td>Maharashtra</td><td>Service</td><td class="r num">3</td><td><span class="o-badge b-success"><span class="dot"></span>Active</span></td></tr>
+            <tr><td class="o-check">☐</td><td class="o-cell-link">BND</td><td>Bandra (Sales)</td><td>Mumbai West</td><td>Maharashtra</td><td>Sales</td><td class="r num">2</td><td><span class="o-badge b-success"><span class="dot"></span>Active</span></td></tr>
+            <tr><td class="o-check">☐</td><td class="o-cell-link">THN</td><td>Thane (Sales & Service)</td><td>Mumbai East</td><td>Maharashtra</td><td>Both</td><td class="r num">4</td><td><span class="o-badge b-success"><span class="dot"></span>Active</span></td></tr>
+            <tr class="deco-muted"><td class="o-check">☐</td><td class="o-cell-link">PNL</td><td>Panvel (Service)</td><td>Raigad</td><td>Maharashtra</td><td>Service</td><td class="r num">1</td><td><span class="o-badge b-muted"><span class="dot"></span>Archived</span></td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <!-- Customers -->
+      <div class="o-nb-page" data-page="customers" style="padding:0">
+        <div class="deco-muted tiny" style="padding:8px 14px">Reuses <b>res.partner</b> (filtered <code>is_bcms_customer = True</code>).</div>
+        <div class="o-list-wrap"><table class="o-list">
+          <thead><tr><th class="o-check">☐</th><th>Customer</th><th>Mobile</th><th>Vehicle(s)</th><th>GSTIN</th><th>External Ref</th></tr></thead>
+          <tbody>
+            <tr><td class="o-check">☐</td><td class="o-cell-link">Ramesh Sharma</td><td>98200 41290</td><td>MH02 CK 4821</td><td class="deco-muted">—</td><td>DMS-10482</td></tr>
+            <tr><td class="o-check">☐</td><td class="o-cell-link">Anil Verma</td><td>91670 22841</td><td>MH04 GT 1180</td><td>27ABCDE1234F1Z5</td><td>DMS-09911</td></tr>
+            <tr><td class="o-check">☐</td><td class="o-cell-link">Meena Kulkarni</td><td>99303 71120</td><td>MH01 AB 9021</td><td class="deco-muted">—</td><td>DMS-10233</td></tr>
+            <tr><td class="o-check">☐</td><td class="o-cell-link">Suresh Patil</td><td>98925 10034</td><td>MH12 KL 3345</td><td class="deco-muted">—</td><td>DMS-10501</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <!-- Expense Heads -->
+      <div class="o-nb-page" data-page="heads" style="padding:0">
+        <div class="o-list-wrap"><table class="o-list">
+          <thead><tr><th class="o-check">☐</th><th>Code</th><th>Expense Head</th><th>Tally Ledger</th><th class="r">Approval Limit</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td class="o-check">☐</td><td class="o-cell-link">EH-01</td><td>Housekeeping</td><td>Indirect Exp · Housekeeping</td><td class="r num">₹5,000.00</td><td><span class="o-badge b-success"><span class="dot"></span>Active</span></td></tr>
+            <tr><td class="o-check">☐</td><td class="o-cell-link">EH-02</td><td>Vehicle fuel</td><td>Indirect Exp · Fuel</td><td class="r num">₹10,000.00</td><td><span class="o-badge b-success"><span class="dot"></span>Active</span></td></tr>
+            <tr><td class="o-check">☐</td><td class="o-cell-link">EH-03</td><td>Equipment repair</td><td>Repairs & Maint.</td><td class="r num">₹25,000.00</td><td><span class="o-badge b-success"><span class="dot"></span>Active</span></td></tr>
+            <tr><td class="o-check">☐</td><td class="o-cell-link">EH-04</td><td>Staff conveyance</td><td>Conveyance</td><td class="r num">₹2,000.00</td><td><span class="o-badge b-success"><span class="dot"></span>Active</span></td></tr>
+            <tr><td class="o-check">☐</td><td class="o-cell-link">EH-05</td><td>Courier & postage</td><td>Postage</td><td class="r num">₹1,500.00</td><td><span class="o-badge b-success"><span class="dot"></span>Active</span></td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <!-- Banks -->
+      <div class="o-nb-page" data-page="banks" style="padding:0">
+        <div class="o-list-wrap"><table class="o-list">
+          <thead><tr><th class="o-check">☐</th><th>Bank</th><th>Account No.</th><th>Type</th><th>Branch</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td class="o-check">☐</td><td class="o-cell-link">HDFC Bank · Andheri West</td><td class="num">••••4021</td><td>Current</td><td>Andheri (Service)</td><td><span class="o-badge b-success"><span class="dot"></span>Active</span></td></tr>
+            <tr><td class="o-check">☐</td><td class="o-cell-link">ICICI Bank · Bandra Kurla</td><td class="num">••••7788</td><td>Current</td><td>Bandra (Sales)</td><td><span class="o-badge b-success"><span class="dot"></span>Active</span></td></tr>
+            <tr><td class="o-check">☐</td><td class="o-cell-link">Axis Bank · Thane West</td><td class="num">••••1290</td><td>Current</td><td>Thane</td><td><span class="o-badge b-success"><span class="dot"></span>Active</span></td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <!-- Agencies -->
+      <div class="o-nb-page" data-page="agencies" style="padding:0">
+        <div class="o-list-wrap"><table class="o-list">
+          <thead><tr><th class="o-check">☐</th><th>Agency</th><th>Contact</th><th>SLA</th><th>Branches</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td class="o-check">☐</td><td class="o-cell-link">SecureCash Logistics</td><td>1800 22 4455</td><td>Same day, by 6 PM</td><td>Andheri, Bandra</td><td><span class="o-badge b-success"><span class="dot"></span>Active</span></td></tr>
+            <tr><td class="o-check">☐</td><td class="o-cell-link">CMS Cash Services</td><td>022 4020 1100</td><td>Next-day pickup</td><td>Thane, Panvel</td><td><span class="o-badge b-success"><span class="dot"></span>Active</span></td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <div class="o-alert o-alert-info o-wrap" data-svg="info">
+      <div>Master records are <b>archived</b>, never physically deleted (BR-05). Every change is tracked in chatter with your identity & timestamp.</div>
+    </div>
+  </div>
+
+  <!-- New dialog -->
+  <div class="o-dialog-ov" id="newDlg">
+    <div class="o-dialog">
+      <div class="o-dialog-h">New Branch <span class="x" data-close data-svg="x"></span></div>
+      <div class="o-dialog-b">
+        <div class="o-field"><label>Branch <span class="req">*</span></label><div class="o-val"><input class="o-input o-boxed" placeholder="e.g. Kandivali (Service)"></div></div>
+        <div class="o-field"><label>Code <span class="req">*</span></label><div class="o-val"><input class="o-input o-boxed" placeholder="e.g. KND"></div></div>
+        <div class="o-field"><label>Cluster <span class="req">*</span></label><div class="o-val"><select class="o-select o-boxed"><option>Mumbai West</option><option>Mumbai East</option><option>Raigad</option></select></div></div>
+        <div class="o-field"><label>Type</label><div class="o-val"><select class="o-select o-boxed"><option>Service</option><option>Sales</option><option>Both</option></select></div></div>
+      </div>
+      <div class="o-dialog-f"><button class="btn btn-default" data-close>Discard</button><button class="btn btn-primary" data-close>Save</button></div>
+    </div>
+  </div>
+
+  <script src="assets/odoo.js"></script>
 </body>
 </html>

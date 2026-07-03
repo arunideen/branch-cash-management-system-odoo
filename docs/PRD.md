@@ -3,12 +3,14 @@
 **Product:** Branch Cash Management System (BCMS)
 **Client:** Prabal Motors Private Limited (PMPL)
 **Source BRD:** `BRD_v1.0.docx` v1.0
-**Document Version:** 1.0 · **Date:** 2026-07-01 · **Status:** Draft for Client Sign-off
+**Platform:** Odoo 19 Community Edition — one fully custom module (`branch_cash_management`)
+**Document Version:** 2.0 · **Date:** 2026-07-03 · **Status:** Draft for Client Sign-off
 **Owner:** Product Management · **Approvers:** CFO/Admin, Corporate Finance, IT
 
 | Rev | Date | Author | Summary |
 |-----|------|--------|---------|
 | 1.0 | 2026-07-01 | Product/BA | Initial PRD derived from BRD v1.0 |
+| 2.0 | 2026-07-03 | Product/BA | Re-platformed to Odoo 19 CE (single custom module); Next.js + Supabase stack replaced |
 
 ---
 
@@ -16,7 +18,7 @@
 
 Prabal Motors Private Limited operates a multi-branch automobile **Sales and Service** business where branch cash is managed through **manual registers** — a process that is error-prone, slow to reconcile, hard to audit, and invisible to management in real time. The **Branch Cash Management System (BCMS)** digitises the entire branch cash lifecycle — **collection request → cashier verification → official receipt → cash expense → end-of-day closing → maker-checker approval → bank deposit → Tally accounting** — under strict **role-based access, a complete immutable audit trail, and no-physical-delete controls**, surfaced through **branch, state, and corporate dashboards** and a suite of operational reports.
 
-BCMS is a responsive **web/mobile application** built on **Next.js + Supabase**. The initial release standardises and controls cash operations across the network; **Tally, bank, WhatsApp, BI, and OCR integrations are planned future enhancements**. Success is measured by the elimination of manual registers, complete digital approvals, reports that reconcile with Tally, and an end-to-end audit trail.
+BCMS is built as **one fully custom Odoo 19 Community Edition module** (`branch_cash_management`) and used through the responsive Odoo web client. The initial release standardises and controls cash operations across the network; **Tally, bank, WhatsApp, BI, and OCR integrations are planned future enhancements**. Success is measured by the elimination of manual registers, complete digital approvals, reports that reconcile with Tally, and an end-to-end audit trail.
 
 ---
 
@@ -151,25 +153,25 @@ The authoritative, uniquely-identified functional requirements (FR-*, 78 items a
 Full list in [Requirements.md](./Requirements.md) §5. Highlights below with the product commitment.
 
 ### 11.1 Security
-RBAC + Row Level Security, JWT `app_metadata` claims, maker-checker enforced server-side, OWASP Top 10 alignment, TLS + encryption at rest, MFA for finance/admin. See [SecurityArchitecture.md](./SecurityArchitecture.md). *(NFR-SEC-01/02)*
+RBAC via **Odoo security groups + record rules** (branch/cluster/state scoping) and `ir.model.access.csv`, maker-checker enforced server-side, OWASP Top 10 alignment, TLS + encryption at rest, **2FA (`auth_totp`)** for finance/admin. See [SecurityArchitecture.md](./SecurityArchitecture.md). *(NFR-SEC-01/02)*
 
 ### 11.2 Accessibility
 WCAG 2.1 AA target — keyboard operability, contrast, semantic components, status not by color alone. See [UIUX.md](./UIUX.md) §8. *(NFR-A11Y-01)*
 
 ### 11.3 Performance
-Search ≤ 2s; standard screens ≤ 3s P95; indexed queries, `pg_trgm`, cursor pagination, materialised views. *(NFR-PERF-01/02)*
+Search ≤ 2s; standard screens ≤ 3s P95; indexed fields, optional `pg_trgm` fuzzy search, server-side pagination, stored computed aggregates. *(NFR-PERF-01/02)*
 
 ### 11.4 Scalability
-Multi-branch/cluster/state data model; indexed RLS; read replica & materialised views for reporting; scales to the whole network and millions of transactions/year. *(NFR-SCAL-01/02)*
+Multi-branch/cluster/state data model; indexed record-rule fields; more Odoo workers + PostgreSQL tuning and stored aggregates for reporting; scales to the whole network and millions of transactions/year. *(NFR-SCAL-01/02)*
 
 ### 11.5 Availability
-Target **≥ 99.5%**; managed Supabase + Vercel; backups + PITR (RPO ≤ 24h, RTO ≤ 4h); graceful degradation. *(NFR-AVAIL-01, NFR-BACKUP-01)*
+Target **≥ 99.5%**; self-hosted Odoo 19 CE + PostgreSQL (Docker/nginx) with restart policies + health checks; daily backups & tested restore (RPO ≤ 24h, RTO ≤ 4h); graceful degradation. *(NFR-AVAIL-01, NFR-BACKUP-01)*
 
 ### 11.6 Audit Logging
 Append-only, immutable audit of all state-changing actions with actor/timestamp/before-after; document version history; full read for Internal Audit. *(NFR-AUDIT-01, FR-AUTH-04/06)*
 
 ### 11.7 Notifications
-In-app real-time notifications for the five BRD triggers, role/scope-targeted; WhatsApp/email future. *(FR-NOTIF-*)*
+In-app notifications via Odoo **activities and chatter messages** for the five BRD triggers, role/scope-targeted; WhatsApp/email future. *(FR-NOTIF-*)*
 
 ### 11.8 Search
 Global ⌘K search and fast per-module search across requests/receipts/customers within scope. *(NFR-PERF-01, R-05)*
@@ -187,8 +189,8 @@ Branch/state/corporate/exception dashboards with KPIs, trends, and drill-down; n
 | # | Dependency | Type | Notes |
 |---|-----------|------|-------|
 | D1 | Client clarifications (CLR-01…12) | Business | Resolve before/at kick-off ([Assumptions.md](./Assumptions.md)). |
-| D2 | Supabase (Auth, DB, RLS, Edge, Realtime, Storage) | Platform | Core backend. |
-| D3 | Vercel hosting | Platform | Frontend delivery. |
+| D2 | Odoo 19 CE + PostgreSQL | Platform | Application framework & database. |
+| D3 | Self-hosted infra (VPS, Docker, nginx) | Platform | Hosting & delivery. |
 | D4 | PMPL org data (branches, clusters, users, opening balances) | Data | Needed for masters & cut-over. |
 | D5 | Receipt/GST format & numbering rules | Business | Blocks receipt module (CLR-04). |
 | D6 | Tally (Phase 4), Bank/CIT APIs (Phase 4) | External | Future integrations. |
@@ -198,13 +200,13 @@ Branch/state/corporate/exception dashboards with KPIs, trends, and drill-down; n
 
 ## 13. Constraints
 
-See [Requirements.md](./Requirements.md) §7 (CON-01…07): web/mobile app; Tally reconciliation with manual v1; directed tech stack; INR/India; multi-branch hierarchy; maker-checker & no-delete throughout.
+See [Requirements.md](./Requirements.md) §7 (CON-01…07): Odoo web app; Tally reconciliation with manual v1; Odoo 19 CE single-module stack; INR/India; multi-branch hierarchy; maker-checker & no-delete throughout.
 
 ---
 
 ## 14. Risk Analysis
 
-Full register in [RiskAssessment.md](./RiskAssessment.md). Top risks: scope creep (RSK-01), RLS data isolation (RSK-03), fraud (RSK-04), financial-calculation bugs (RSK-08), Tally gap (RSK-02), adoption (RSK-05), connectivity (RSK-12).
+Full register in [RiskAssessment.md](./RiskAssessment.md). Top risks: scope creep (RSK-01), record-rule data isolation (RSK-03), fraud (RSK-04), financial-calculation bugs (RSK-08), Tally gap (RSK-02), adoption (RSK-05), connectivity (RSK-12).
 
 ---
 

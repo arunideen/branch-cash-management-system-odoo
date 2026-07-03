@@ -4,10 +4,9 @@
 
 ```mermaid
 flowchart LR
-    T["Workflow transition (reject / submit / pending / accounting pending)"] --> EF["EF: notify-dispatch"]
-    EF --> RES["Resolve recipients by role + scope"]
-    RES --> INS[("insert notification rows")]
-    INS --> RT["Supabase Realtime → recipient devices"]
-    RT --> UI["In-app bell + unread badge"]
-    INS -.->|Phase 4| EXT["WhatsApp / Email / SMS"]
+    T["Workflow transition (reject / submit / pending / accounting pending)"] --> M["Model method: activity_schedule / message_post"]
+    M --> RES["Resolve recipient(s) by group + record-rule scope"]
+    RES --> ACT[("mail.activity (to-do) + mail.message")]
+    ACT --> UI["Systray: activity clock + unread badge (bus)"]
+    ACT -.->|optional / Phase 4| EXT["Email (mail.template) / WhatsApp / SMS"]
 ```

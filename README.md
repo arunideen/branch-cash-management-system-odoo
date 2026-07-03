@@ -1,6 +1,7 @@
 # Branch Cash Management System (BCMS)
 
 **Client:** Prabal Motors Private Limited (PMPL)
+**Platform:** Odoo 19 Community Edition — one fully custom module (`branch_cash_management`)
 **Status:** Analysis & documentation phase (no application code yet)
 
 A digital, auditable workflow system that standardises branch cash operations across Sales & Service — from **collection request → cashier verification → official receipt → cash closing → maker-checker approval → bank deposit → Tally accounting** — with role-based access, a complete audit trail, dashboards, and reports.
@@ -24,9 +25,9 @@ A digital, auditable workflow system that standardises branch cash operations ac
 - **Traceability Matrix:** [`docs/TraceabilityMatrix.md`](./docs/TraceabilityMatrix.md)
 - **Open questions for the client:** [`docs/ClientQuestionnaire.md`](./docs/ClientQuestionnaire.md)
 
-## Proposed stack (under review)
+## Platform & stack
 
-Frontend **Next.js + React + TypeScript + Tailwind + shadcn/ui**; backend **Supabase (PostgreSQL, Auth, RLS, Edge Functions, Realtime, Storage)**. An **Odoo Community (framework-only)** alternative is under evaluation — see the architecture discussion.
+Built as **one fully custom Odoo 19 Community Edition module** (`branch_cash_management`), depending only on Odoo core **`base`, `mail`, `web`** (LGPL-3, no Enterprise features). Business logic lives in **ORM models** with **security groups + record rules** for branch/cluster/state scoping; the UI is the **Odoo backend** (list/form/kanban/pivot/graph views + OWL dashboards); documents use **`ir.attachment`**, numbering uses **`ir.sequence`**, notifications/audit use **chatter + activities**, and PDF outputs use **QWeb**. **Tally remains the accounting ledger** (manual in v1, API later) — the module does **not** depend on Odoo `account`. Deployed **self-hosted** (Odoo + PostgreSQL in Docker behind nginx). See [`docs/TechnicalArchitecture.md`](./docs/TechnicalArchitecture.md).
 
 ---
 

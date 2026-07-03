@@ -4,32 +4,25 @@
 
 ```mermaid
 graph TD
-    subgraph Presentation["Presentation Layer (Next.js/React)"]
-        P1["Pages / Route Groups per role area"]
-        P2["Feature Components (shadcn/ui)"]
-        P3["Forms (RHF + Zod)"]
+    subgraph Presentation["Presentation Layer (Odoo Web Client)"]
+        P1["Menus / Window Actions per role"]
+        P2["Views: list / form (statusbar) / kanban / search / pivot / graph"]
+        P3["OWL components (dashboards, custom widgets)"]
     end
-    subgraph Application["Application Layer"]
-        A1["Feature Hooks (TanStack Query)"]
-        A2["Client Services / API clients"]
-        A3["Zod schemas (shared)"]
-        A4["Auth & Route Guards"]
+    subgraph Application["Application / Domain Layer (Python models)"]
+        A1["Model methods: action_submit / issue_receipt / finalise / verify"]
+        A2["Business rules: closing math, maker-checker, variance, numbering"]
+        A3["Constraints: @api.constrains / depends / onchange"]
+        A4["State machines (state Selection)"]
     end
-    subgraph Domain["Domain Layer"]
-        D1["Business rules: closing math, maker-checker, variance"]
-        D2["Entities & value objects (types)"]
-        D3["Workflow / state machines"]
+    subgraph Access["Access & Framework Layer"]
+        AC1["Security groups + record rules (ir.rule)"]
+        AC2["ir.model.access.csv (CRUD rights)"]
+        AC3["ir.sequence / ir.attachment / mail.thread / ir.cron"]
     end
-    subgraph Data["Data Access Layer"]
-        DA1["Supabase client (REST)"]
-        DA2["Edge Function endpoints"]
-        DA3["Realtime channels"]
-        DA4["Storage adapter"]
+    subgraph Infra["Infrastructure"]
+        I1["Odoo ORM"]
+        I2["PostgreSQL + filestore"]
     end
-    subgraph Infra["Infrastructure (Supabase)"]
-        I1["PostgreSQL + RLS + Views/Functions"]
-        I2["Auth / JWT"]
-        I3["pg_cron scheduled jobs"]
-    end
-    Presentation --> Application --> Domain --> Data --> Infra
+    Presentation --> Application --> Access --> Infra
 ```

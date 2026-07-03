@@ -3,9 +3,10 @@
 **Project:** Branch Cash Management System (BCMS)
 **Client:** Prabal Motors Private Limited (PMPL)
 **Source Document:** `BRD_v1.0.docx` — Comprehensive Business Requirements Document, Version 1.0
-**Document Version:** 1.0
+**Platform:** Odoo 19 Community Edition — one fully custom module (`branch_cash_management`)
+**Document Version:** 2.0
 **Prepared By:** Product / Business Analysis
-**Date:** 2026-07-01
+**Date:** 2026-07-03
 **Status:** Draft for Client Review
 
 ---
@@ -346,10 +347,10 @@ Derived from BRD §11, §12, §18, §22 and cash-control best practice. These ar
 
 | ID | Constraint | Source / Type |
 |----|------------|---------------|
-| CON-01 | Solution must be delivered as a **web/mobile workflow application** (responsive web). | §1 (Project Type), Business |
-| CON-02 | Accounting system of record is **Tally**; reports must reconcile to Tally. Direct Tally API is a **future** enhancement (not in initial release). | §3, §21, §22 |
+| CON-01 | Solution must be delivered as a **responsive Odoo web application** (Odoo 19 CE backend). | §1 (Project Type), Business |
+| CON-02 | Accounting system of record is **Tally**; reports must reconcile to Tally. Direct Tally API is a **future** enhancement (not in initial release). The module does **not** depend on Odoo's `account` app. | §3, §21, §22 |
 | CON-03 | Bank API, WhatsApp notifications, Power BI/Zoho Analytics, and OCR are **out of scope for the initial release** (future enhancements). | §21 |
-| CON-04 | Technology stack is directed: **Next.js/React/TypeScript/Tailwind/Shadcn/RHF/Zod/TanStack Query** frontend; **Supabase** (Postgres, Auth, RLS, Edge Functions, Realtime, Storage) backend. | Project directive (Phase 3) |
+| CON-04 | Technology stack is directed: **Odoo 19 Community Edition** (LGPL-3), built as **one fully custom module** (`branch_cash_management`) depending only on core `base`, `mail`, `web` — Python models, XML/OWL views, QWeb reports, PostgreSQL. No Odoo Enterprise features. | Platform decision (2026-07-03) |
 | CON-05 | Currency is **INR**; operations are **India-based** (statutory, timezone, language). | Derived |
 | CON-06 | System must operate across a **multi-branch, multi-cluster, multi-state** organisational hierarchy. | §16, §20 |
 | CON-07 | Must support **maker-checker** and **no-physical-delete** compliance postures throughout. | §18 |
@@ -367,9 +368,9 @@ The full, numbered assumption register with rationale and impact lives in **[Ass
 | AS-03 | Tally integration in the initial release is **manual data entry** of voucher details (no live API). |
 | AS-04 | Notifications in the initial release are **in-app**; WhatsApp/email deferred. |
 | AS-05 | The organisational hierarchy is Branch → Cluster → State → Corporate. |
-| AS-06 | Document uploads are images/PDFs stored in Supabase Storage with versioning. |
+| AS-06 | Document uploads are images/PDFs stored as Odoo attachments (`ir.attachment`) with versioning. |
 
-> See [Assumptions.md](./Assumptions.md) for AS-01 … AS-30 in full.
+> See [Assumptions.md](./Assumptions.md) for AS-01 … AS-36 in full (including the Odoo platform assumptions AS-31…AS-36).
 
 ---
 
@@ -434,7 +435,7 @@ Open questions for the client, prioritised. Full list and phrasing in [Assumptio
 | CLR-03 | Provide expected data volumes: number of branches, users, and transactions/day. | High | Sizing, NFR targets |
 | CLR-04 | Confirm receipt format & statutory/GST requirements for official receipts. | High | RCPT, compliance |
 | CLR-05 | Define approval thresholds/limits (e.g., expense approval by amount, variance escalation limits). | Medium | Workflow rules |
-| CLR-06 | Confirm organisational hierarchy (Branch → Cluster → State → Corporate) and data-scoping rules per role. | Medium | AUTH, RLS |
+| CLR-06 | Confirm organisational hierarchy (Branch → Cluster → State → Corporate) and data-scoping rules per role. | Medium | AUTH, record rules |
 | CLR-07 | Confirm multi-cashier / multi-shift model per branch and closing granularity. | Medium | CLS |
 | CLR-08 | Confirm notification channels for v1 (in-app only vs. email). | Low | NOTIF |
 | CLR-09 | Confirm data-retention and period-locking policies. | Medium | Compliance, ACC |

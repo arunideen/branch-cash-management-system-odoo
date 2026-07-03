@@ -3,7 +3,8 @@
 **Project:** Branch Cash Management System (BCMS)
 **Client:** Prabal Motors Private Limited (PMPL)
 **Source:** `BRD_v1.0.docx` v1.0 · Open items from [Assumptions.md](./Assumptions.md) §5 and [Requirements.md](./Requirements.md) §12
-**Version:** 1.0 · **Date:** 2026-07-01 · **Status:** Awaiting Client Response
+**Platform:** Odoo 19 Community Edition — module `branch_cash_management`
+**Version:** 2.0 · **Date:** 2026-07-03 · **Status:** Awaiting Client Response
 
 ---
 
@@ -145,7 +146,7 @@ Please provide best estimates (now / 12-month / 3-year):
 
 | Our assumption if blank | Affects |
 |--------------------------|---------|
-| Branch→Cluster→State→Corporate; scoping as above (AS-04, AS-22) | AUTH, RLS design |
+| Branch→Cluster→State→Corporate; scoping as above (AS-04, AS-22) | AUTH, record-rule design |
 
 ---
 

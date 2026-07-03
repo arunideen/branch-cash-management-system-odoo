@@ -16,7 +16,7 @@ stateDiagram-v2
 
 ```mermaid
 flowchart LR
-    TX["Receipts / Expenses / Deposits"] --> ACC["accounting_status (Pending)"]
+    TX["Receipts / Expenses / Deposits"] --> ACC["bcms.accounting.status (Pending)"]
     ACC --> MAN["Accountant enters Tally voucher no + status"]
     MAN --> REC{"Matches Tally?"}
     REC -->|Yes| DONE["Reconciled"]

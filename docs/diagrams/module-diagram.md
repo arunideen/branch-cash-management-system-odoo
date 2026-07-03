@@ -4,25 +4,23 @@
 
 ```mermaid
 graph LR
-    subgraph Core["Core / Shared"]
-        Auth["auth & session"]
-        RBAC["rbac / authz"]
-        Audit["audit logging"]
-        Notify["notifications"]
-        Files["file storage"]
-        UI["ui-kit / design system"]
+    subgraph Core["Odoo Core (dependencies)"]
+        BASE["base"]
+        MAIL["mail (chatter, activities)"]
+        WEBM["web (client, assets)"]
     end
-    subgraph Features["Feature Modules"]
-        M1["masters"]
+    subgraph BCMS["branch_cash_management (single module) — functional areas"]
+        M1["masters (org + reference data)"]
         M2["collections"]
-        M3["cashier"]
+        M3["cashier / verification"]
         M4["receipts"]
         M5["closing"]
         M6["expenses"]
         M7["deposits"]
-        M8["accounting"]
-        M9["reports"]
-        M10["dashboards"]
+        M8["accounting (→ Tally)"]
+        M9["reporting"]
+        M10["dashboards (OWL)"]
+        X["cross-cutting: security (groups/rules/ACL), audit log, sequences, attachments"]
     end
     M2 --> M3 --> M4 --> M5
     M6 --> M5
@@ -30,5 +28,8 @@ graph LR
     M5 --> M8
     M8 --> M9
     M9 --> M10
-    Features --> Core
+    BCMS --> Core
+    X -.-> BCMS
 ```
+
+*All areas above are packaged in one addon; cross-cutting concerns reuse Odoo core (auth/session, chatter/activities for audit & notifications, `ir.attachment` for files) rather than bespoke shared modules.*

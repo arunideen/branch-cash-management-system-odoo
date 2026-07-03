@@ -5,16 +5,16 @@
 ```mermaid
 sequenceDiagram
     participant U as User
-    participant N as Next.js
-    participant ST as Supabase Storage (private)
-    participant DB as Postgres (document)
-    U->>N: choose file (PDF/JPG/PNG ≤10MB)
-    N->>N: validate type/size (magic bytes)
-    N->>ST: upload to private bucket (branch/entity/uuid)
-    ST-->>N: object path
-    N->>DB: insert document (version+1, is_current=true)
-    DB->>DB: set prior version is_current=false
-    U->>N: view file
-    N->>ST: request short-lived signed URL (scoped)
-    ST-->>U: file via signed URL
+    participant OD as Odoo Server
+    participant FS as Filestore (private volume)
+    participant DB as PostgreSQL (ir.attachment)
+    U->>OD: choose file (PDF/JPG/PNG ≤10MB) on the record
+    OD->>OD: validate type/size (magic bytes, web.max_file_upload_size)
+    OD->>FS: store file bytes (checksum-addressed)
+    FS-->>OD: store reference
+    OD->>DB: create ir.attachment (res_model/res_id, version current)
+    DB->>DB: mark prior version superseded (BR-13)
+    U->>OD: view file
+    OD->>OD: check record-rule scope of parent record + access token
+    OD-->>U: stream attachment (no public URL)
 ```

@@ -4,13 +4,13 @@
 
 ```mermaid
 flowchart TD
-    R([API request]) --> V{"Valid (Zod)?"}
-    V -->|No| E422["422 VALIDATION_ERROR (field details)"]
-    V -->|Yes| AZ{"Authorized (RLS/role/scope)?"}
-    AZ -->|No| E403["403 FORBIDDEN_SCOPE / MAKER_CHECKER_VIOLATION (audited)"]
+    R([create / write / action_* call]) --> V{"Fields & @api.constrains valid?"}
+    V -->|No| E422["ValidationError (field-level, rolled back)"]
+    V -->|Yes| AZ{"Authorized (ACL + record rule + group)?"}
+    AZ -->|No| E403["AccessError: FORBIDDEN_SCOPE / MAKER_CHECKER_VIOLATION (audited)"]
     AZ -->|Yes| ST{"Valid state transition?"}
-    ST -->|No| E409["409 INVALID_STATE_TRANSITION"]
-    ST -->|Yes| TX{"DB txn ok?"}
-    TX -->|No| E500["500 INTERNAL_ERROR (rollback, alert Sentry)"]
-    TX -->|Yes| OK["200/201 success + audit_log"]
+    ST -->|No| E409["UserError: INVALID_STATE_TRANSITION"]
+    ST -->|Yes| TX{"Transaction commits?"}
+    TX -->|No| E500["Exception → rollback + Sentry alert"]
+    TX -->|Yes| OK["Success + bcms.audit.log + activity"]
 ```

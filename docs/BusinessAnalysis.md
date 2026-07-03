@@ -2,7 +2,8 @@
 
 **Project:** Branch Cash Management System (BCMS) — Prabal Motors Private Limited
 **Source:** `BRD_v1.0.docx` v1.0
-**Version:** 1.0 · **Date:** 2026-07-01 · **Status:** Draft for Client Review
+**Platform:** Odoo 19 Community Edition — module `branch_cash_management`
+**Version:** 2.0 · **Date:** 2026-07-03 · **Status:** Draft for Client Review
 
 > This document delivers **Phase 1 (business analysis)** and **Phase 2 (deep research)**. It positions the BCMS in its market, benchmarks it against comparable solutions and industry best practice, and clearly separates **Required features (from the BRD)** from **Recommended features (analyst additions, not BRD requirements)**.
 
@@ -60,11 +61,11 @@ The research below is mapped to concrete BCMS design decisions (referenced by do
 - **Daily reconciliation with dual sign-off.** Reconcile the drawer each business day; a second authorised person counts/verifies. → **Cash Closing + Branch Accountant physical verification** (FR-CLS-08…14).
 - **Prompt, tracked deposits.** Deposit within 1–3 days; track deposit + acknowledgement. → **Bank Deposit module + Pending Deposits report + Exception dashboard** (FR-DEP-*, FR-RPT-05, FR-DASH-05).
 - **Immutable audit trail.** Keep comprehensive, tamper-evident records for audits. → **Append-only audit log, no physical delete** (FR-AUTH-04/07, BR-05).
-- **Restrict backdated / unauthorised entries** (as RealBooks does). → **Period locking (recommended), maker-checker, RLS** — see [SecurityArchitecture.md](./SecurityArchitecture.md).
+- **Restrict backdated / unauthorised entries** (as RealBooks does). → **Period locking (recommended), maker-checker, record rules** — see [SecurityArchitecture.md](./SecurityArchitecture.md).
 
 ### 4.2 Security & access (application)
-- **RBAC + Row Level Security** with authorization data in **JWT `app_metadata`** (not user-editable `user_metadata`); **index every column used in RLS**; **test policies from the client SDK, not the SQL editor**. → [SecurityArchitecture.md](./SecurityArchitecture.md), [DatabaseDesign.md](./DatabaseDesign.md).
-- **Custom Access Token Auth Hook** to inject `role`, `branch_id`, `cluster_id`, `state_id` claims for scoping. → [SecurityArchitecture.md](./SecurityArchitecture.md) §Authorization.
+- **RBAC via security groups + record rules** with scope fields (`bcms_branch_id`/`bcms_cluster_id`/`bcms_state_id`) on `res.users` that users **cannot self-edit**; **index every field used in a record rule**; **test rules with a non-admin user** (`with_user`) since the superuser bypasses record rules. → [SecurityArchitecture.md](./SecurityArchitecture.md), [DatabaseDesign.md](./DatabaseDesign.md).
+- **Scope-driven record rules** using the user's `branch_id`/`cluster_id`/`state_id` and role groups. → [SecurityArchitecture.md](./SecurityArchitecture.md) §3 (Authorization).
 - **OWASP Top 10 (2021)** alignment across the build. → [SecurityArchitecture.md](./SecurityArchitecture.md) §OWASP.
 
 ### 4.3 UX & workflow
@@ -165,7 +166,7 @@ These are **in-scope commitments** traceable to BRD sections and Requirement IDs
 |-----------|------------|
 | Purpose-built, workflow-first, standardised across Sales+Service | Depends on user adoption vs. legacy registers |
 | Strong controls (maker-checker, audit, no-delete) | v1 Tally link is manual (reconciliation effort) |
-| Modern, scalable stack (Next.js + Supabase) | Online-first assumption may not suit all branches |
+| Proven, scalable platform (Odoo 19 CE + PostgreSQL), single custom module | Online-first assumption may not suit all branches |
 
 | Opportunities | Threats |
 |---------------|---------|
@@ -212,8 +213,8 @@ These are **in-scope commitments** traceable to BRD sections and Requirement IDs
 - [Integrated Cash Logistics — Retail Cash Handling Procedures & Best Practices](https://integratedcashlogistics.com/cash-handling-procedures-retail/)
 - [Tipalti — What are Cash Controls?](https://tipalti.com/resources/learn/cash-controls/)
 - [NetSuite — Cash Reconciliation Defined](https://www.netsuite.com/portal/resource/articles/accounting/cash-reconciliation.shtml)
-- [Supabase Docs — Custom Claims & RBAC](https://supabase.com/docs/guides/database/postgres/custom-claims-and-role-based-access-control-rbac)
-- [Supabase Docs — Row Level Security](https://supabase.com/docs/guides/database/postgres/row-level-security)
+- [Odoo Docs — Security in Odoo (groups, access rights, record rules)](https://www.odoo.com/documentation/19.0/developer/reference/backend/security.html)
+- [Odoo Docs — ORM / Models reference](https://www.odoo.com/documentation/19.0/developer/reference/backend/orm.html)
 - [PrecisionTech — Tally Integration Services (XML/HTTP API)](https://precisiontech.in/apps/tally/tally-integration/)
 - [AI Accountant — Tally Integration Guide](https://www.aiaccountant.com/blog/tally-integration-with-ai-accountant)
 

@@ -1,7 +1,8 @@
 # Mermaid Diagrams — Master Index
 
 **Project:** Branch Cash Management System (BCMS) — Prabal Motors Private Limited
-**Version:** 1.0 · **Date:** 2026-07-01 · **Status:** Draft for Client Review
+**Platform:** Odoo 19 Community Edition — module `branch_cash_management`
+**Version:** 2.0 · **Date:** 2026-07-03 · **Status:** Draft for Client Review
 
 > Every Mermaid diagram in this documentation set is stored as its own file in [docs/diagrams/](./diagrams/). This index catalogues them by category, diagram type, and the module/requirement they cover. Diagrams also appear inline (for readability) in [Workflows.md](./Workflows.md), [TechnicalArchitecture.md](./TechnicalArchitecture.md), [DatabaseDesign.md](./DatabaseDesign.md), and [SecurityArchitecture.md](./SecurityArchitecture.md).
 
@@ -49,7 +50,7 @@
 | # | Diagram | Type | File | Source doc |
 |---|---------|------|------|------------|
 | 21 | Authentication Flow | Sequence | [diagrams/auth-flow.md](./diagrams/auth-flow.md) | SecurityArchitecture §2 |
-| 22 | Authorization Flow (RLS + maker-checker) | Flowchart | [diagrams/authorization-flow.md](./diagrams/authorization-flow.md) | SecurityArchitecture §3 |
+| 22 | Authorization Flow (record rules + maker-checker) | Flowchart | [diagrams/authorization-flow.md](./diagrams/authorization-flow.md) | SecurityArchitecture §3 |
 
 ## 5. Cross-cutting Flows
 

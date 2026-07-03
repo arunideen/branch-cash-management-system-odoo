@@ -3,113 +3,91 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>My Requests — BCMS</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/styles.css">
+  <title>Collection Requests — Branch Cash (Odoo 19 CE)</title>
+  <link rel="stylesheet" href="assets/odoo.css">
 </head>
-<body data-page="my-requests" data-role="Service Advisor" data-user="Rahul Iyer">
-  <main class="content">
-    <div class="breadcrumb"><span>Collections</span><span class="sep">/</span><b>My Requests</b></div>
-    <div class="page-head">
-      <div class="titles">
-        <h1>My requests</h1>
-        <p>Track the status of collection requests you have raised.</p>
-      </div>
-      <div class="actions">
-        <a class="btn btn-primary" href="collection-new.html" data-icon="plus">New request</a>
-      </div>
-    </div>
+<body class="o-app" data-menu="collections" data-user="Rahul Iyer" data-role="Service Advisor">
 
-    <div class="alert alert-warn mb-3">
-      <span data-icon="alert"></span>
-      <div><b>1 request needs correction.</b> <span class="ref-code">CR/AND/2026/000119</span> was rejected by the cashier — <i>"Invoice copy missing / illegible"</i>. Fix and resubmit.
-        <a href="collection-new.html" style="margin-left:6px">Correct now →</a></div>
+  <div class="o-cp">
+    <div class="o-cp-top">
+      <div class="o-cp-actions">
+        <a class="btn btn-primary" href="collection-new.html" data-svg="plus">New</a>
+        <div class="o-breadcrumb"><b>Collection Requests</b></div>
+      </div>
+      <div class="o-cp-right">
+        <div class="o-search">
+          <span data-svg="search"></span>
+          <span class="o-facet">My Requests</span>
+          <input placeholder="Search...">
+        </div>
+        <div class="o-viewswitch">
+          <button class="on" title="List" data-svg="list"></button>
+          <button title="Kanban" onclick="location.href='cashier-queue.html'" data-svg="kanban"></button>
+          <button title="Pivot" data-svg="pivot"></button>
+          <button title="Graph" data-svg="graph"></button>
+        </div>
+        <div class="o-pager"><span class="o-val">1-5</span> / 9 <button data-svg="left"></button><button data-svg="right"></button></div>
+      </div>
     </div>
+  </div>
 
-    <div class="card">
-      <div class="card-head">
-        <div class="chip-counts">
-          <span class="chip-count"><span class="bdot" style="background:var(--warning-500)"></span>Submitted 3</span>
-          <span class="chip-count"><span class="bdot" style="background:var(--success)"></span>Receipted 5</span>
-          <span class="chip-count"><span class="bdot" style="background:var(--destructive)"></span>Rejected 1</span>
-        </div>
-        <div class="actions">
-          <div class="search-inline">
-            <span data-icon="search" style="font-size:0"></span>
-            <input placeholder="Search id / customer / reference">
-          </div>
-          <button class="btn btn-ghost btn-sm" data-icon="filter">Filters</button>
-        </div>
-      </div>
-      <div class="table-wrap">
-        <table class="tbl">
-          <thead>
-            <tr><th>Request no.</th><th>Customer</th><th>Reference</th><th class="th-right">Amount</th><th>Mode</th><th>Raised</th><th>Status</th><th></th></tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><span class="ref-code">CR/AND/2026/000123</span></td>
-              <td class="cust"><div class="avatar">RS</div><div><b>Ramesh Sharma</b><small>98200 41290</small></div></td>
-              <td><span class="ref-code">JC-00891</span></td>
-              <td class="money">₹4,520</td>
-              <td><span class="badge badge-slate">Cash</span></td>
-              <td class="small muted">10:24</td>
-              <td><span class="badge badge-amber"><span class="bdot"></span>Submitted</span></td>
-              <td class="td-right"><a class="small" href="cashier-queue.html">Track →</a></td>
-            </tr>
-            <tr>
-              <td><span class="ref-code">CR/AND/2026/000122</span></td>
-              <td class="cust"><div class="avatar">AV</div><div><b>Anil Verma</b><small>91670 22841</small></div></td>
-              <td><span class="ref-code">INV-2026-0456</span></td>
-              <td class="money">₹62,000</td>
-              <td><span class="badge badge-indigo">Mixed</span></td>
-              <td class="small muted">09:58</td>
-              <td><span class="badge badge-sky"><span class="bdot"></span>Accepted</span></td>
-              <td class="td-right"><a class="small" href="verify-collect.html">View →</a></td>
-            </tr>
-            <tr>
-              <td><span class="ref-code">CR/AND/2026/000121</span></td>
-              <td class="cust"><div class="avatar">MK</div><div><b>Meena Kulkarni</b><small>99303 71120</small></div></td>
-              <td><span class="ref-code">JC-00884</span></td>
-              <td class="money">₹18,900</td>
-              <td><span class="badge badge-sky">UPI</span></td>
-              <td class="small muted">09:41</td>
-              <td><span class="badge badge-emerald"><span class="bdot"></span>Receipted</span></td>
-              <td class="td-right"><a class="small" href="receipt.html">Receipt →</a></td>
-            </tr>
-            <tr>
-              <td><span class="ref-code">CR/AND/2026/000119</span></td>
-              <td class="cust"><div class="avatar">SP</div><div><b>Suresh Patil</b><small>98925 10034</small></div></td>
-              <td><span class="ref-code">INV-2026-0451</span></td>
-              <td class="money">₹9,300</td>
-              <td><span class="badge badge-slate">Cash</span></td>
-              <td class="small muted">Yesterday</td>
-              <td><span class="badge badge-red"><span class="bdot"></span>Rejected</span></td>
-              <td class="td-right"><a class="small" href="collection-new.html">Fix →</a></td>
-            </tr>
-            <tr>
-              <td><span class="ref-code">CR/AND/2026/000118</span></td>
-              <td class="cust"><div class="avatar">DK</div><div><b>Deepa Kamath</b><small>90040 88213</small></div></td>
-              <td><span class="ref-code">JC-00879</span></td>
-              <td class="money">₹2,150</td>
-              <td><span class="badge badge-slate">Cash</span></td>
-              <td class="small muted">Yesterday</td>
-              <td><span class="badge badge-emerald"><span class="bdot"></span>Receipted</span></td>
-              <td class="td-right"><a class="small" href="receipt.html">Receipt →</a></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="card-pad flex justify-between items-center" style="border-top:1px solid var(--border)">
-        <span class="tiny muted">Showing 5 of 9 requests</span>
-        <div class="flex gap-1">
-          <button class="btn btn-ghost btn-sm">Previous</button>
-          <button class="btn btn-ghost btn-sm">Next</button>
-        </div>
-      </div>
+  <div class="o-content">
+    <div class="o-alert o-alert-warn o-wrap" style="margin-bottom:0" data-svg="alert">
+      <div><b>CR/AND/2026-27/000119 was rejected</b> by the cashier — <i>"Invoice copy missing / illegible"</i>. Correct and resubmit. <a href="collection-new.html">Open →</a></div>
     </div>
-  </main>
-  <script src="assets/app.js"></script>
+    <div class="o-list-wrap">
+      <table class="o-list">
+        <thead>
+          <tr>
+            <th class="o-check">☐</th>
+            <th>Request No.</th><th>Customer</th><th>Reference</th>
+            <th class="r">Amount</th><th>Mode</th><th>Created on</th><th>Status</th>
+            <th class="o-optional-toggle">⚙</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr onclick="location.href='cashier-queue.html'">
+            <td class="o-check">☐</td>
+            <td class="o-cell-link">CR/AND/2026-27/000123</td>
+            <td>Ramesh Sharma</td><td>JC-00891</td>
+            <td class="r num">4,520.00</td><td>Cash</td><td class="deco-muted">02-07-2026 10:24</td>
+            <td><span class="o-badge b-warning"><span class="dot"></span>Submitted</span></td><td></td>
+          </tr>
+          <tr onclick="location.href='verify-collect.html'">
+            <td class="o-check">☐</td>
+            <td class="o-cell-link">CR/AND/2026-27/000122</td>
+            <td>Anil Verma</td><td>INV-2026-0456</td>
+            <td class="r num">62,000.00</td><td>Mixed</td><td class="deco-muted">02-07-2026 09:58</td>
+            <td><span class="o-badge b-info"><span class="dot"></span>Accepted</span></td><td></td>
+          </tr>
+          <tr onclick="location.href='receipt.html'">
+            <td class="o-check">☐</td>
+            <td class="o-cell-link">CR/AND/2026-27/000121</td>
+            <td>Meena Kulkarni</td><td>JC-00884</td>
+            <td class="r num">18,900.00</td><td>Online</td><td class="deco-muted">02-07-2026 09:41</td>
+            <td><span class="o-badge b-success"><span class="dot"></span>Receipted</span></td><td></td>
+          </tr>
+          <tr onclick="location.href='collection-new.html'">
+            <td class="o-check">☐</td>
+            <td class="o-cell-link">CR/AND/2026-27/000119</td>
+            <td>Suresh Patil</td><td>INV-2026-0451</td>
+            <td class="r num">9,300.00</td><td>Cash</td><td class="deco-muted">01-07-2026 17:12</td>
+            <td><span class="o-badge b-danger"><span class="dot"></span>Rejected</span></td><td></td>
+          </tr>
+          <tr onclick="location.href='receipt.html'">
+            <td class="o-check">☐</td>
+            <td class="o-cell-link">CR/AND/2026-27/000118</td>
+            <td>Deepa Kamath</td><td>JC-00879</td>
+            <td class="r num">2,150.00</td><td>Cash</td><td class="deco-muted">01-07-2026 16:05</td>
+            <td><span class="o-badge b-success"><span class="dot"></span>Receipted</span></td><td></td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr><td></td><td colspan="3">5 / 9</td><td class="r num">96,870.00</td><td colspan="4"></td></tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+  <script src="assets/odoo.js"></script>
 </body>
 </html>

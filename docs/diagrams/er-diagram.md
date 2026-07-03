@@ -1,59 +1,63 @@
 # Entity-Relationship Diagram
 
-**Type:** ER diagram · **Ref:** [DatabaseDesign.md](../DatabaseDesign.md) §2
+**Type:** ER diagram (domain) · **Ref:** [DatabaseDesign.md](../DatabaseDesign.md) §2
 
 ```mermaid
 erDiagram
     STATE ||--o{ CLUSTER : has
     CLUSTER ||--o{ BRANCH : has
-    BRANCH ||--o{ APP_USER : employs
-    ROLE ||--o{ APP_USER : assigned
+    BRANCH ||--o{ USER : employs
     BRANCH ||--o{ COLLECTION_REQUEST : raises
-    APP_USER ||--o{ COLLECTION_REQUEST : creates
-    CUSTOMER ||--o{ COLLECTION_REQUEST : for
+    USER ||--o{ COLLECTION_REQUEST : creates
+    PARTNER ||--o{ COLLECTION_REQUEST : for
     COLLECTION_REQUEST ||--o| RECEIPT : generates
-    COLLECTION_REQUEST ||--o{ DOCUMENT : has
+    COLLECTION_REQUEST ||--o{ ATTACHMENT : has
     RECEIPT ||--o{ PAYMENT_DETAIL : includes
-    BRANCH ||--o{ CASH_EXPENSE : incurs
-    EXPENSE_HEAD ||--o{ CASH_EXPENSE : categorises
-    CASH_EXPENSE ||--o{ DOCUMENT : attaches
-    BRANCH ||--o{ BANK_DEPOSIT : makes
-    BANK_ACCOUNT ||--o{ BANK_DEPOSIT : into
-    PICKUP_AGENCY ||--o{ BANK_DEPOSIT : via
-    BANK_DEPOSIT ||--o{ DOCUMENT : slip_ack
+    BRANCH ||--o{ EXPENSE : incurs
+    EXPENSE_HEAD ||--o{ EXPENSE : categorises
+    EXPENSE ||--o{ ATTACHMENT : attaches
+    BRANCH ||--o{ DEPOSIT : makes
+    BANK_ACCOUNT ||--o{ DEPOSIT : into
+    PICKUP_AGENCY ||--o{ DEPOSIT : via
+    DEPOSIT ||--o{ ATTACHMENT : slip_ack
     BRANCH ||--o{ CASH_CLOSING : closes
-    APP_USER ||--o{ CASH_CLOSING : performs
+    USER ||--o{ CASH_CLOSING : performs
     CASH_CLOSING ||--o{ APPROVAL : routed_through
     CASH_CLOSING ||--o| ACCOUNTING_STATUS : accounted
     RECEIPT ||--o| ACCOUNTING_STATUS : accounted
-    CASH_EXPENSE ||--o| ACCOUNTING_STATUS : accounted
+    EXPENSE ||--o| ACCOUNTING_STATUS : accounted
     LEDGER ||--o{ ACCOUNTING_STATUS : posted_to
-    APP_USER ||--o{ NOTIFICATION : receives
-    APP_USER ||--o{ AUDIT_LOG : acts
+    USER ||--o{ AUDIT_LOG : acts
+
+    USER { int id PK "res.users (extended)" }
+    PARTNER { int id PK "res.partner (customer)" }
+    ATTACHMENT { int id PK "ir.attachment" }
 
     COLLECTION_REQUEST {
-      uuid id PK
-      text request_no
-      uuid branch_id FK
-      uuid customer_id FK
-      numeric amount
-      payment_mode expected_mode
-      request_status status
+      int id PK
+      char name "Request No (ir.sequence)"
+      int branch_id FK
+      int partner_id FK
+      monetary amount
+      selection expected_mode
+      selection state
     }
     RECEIPT {
-      uuid id PK
-      text receipt_no
-      uuid request_id FK
-      numeric amount
-      payment_mode mode
+      int id PK
+      char name "Receipt No (ir.sequence)"
+      int request_id FK
+      monetary amount
+      selection mode
     }
     CASH_CLOSING {
-      uuid id PK
+      int id PK
       date business_date
-      numeric opening_cash
-      numeric expected_cash
-      numeric physical_cash
-      numeric variance
-      closing_status status
+      monetary opening_cash
+      monetary expected_cash "computed/stored"
+      monetary physical_cash
+      monetary variance "computed/stored"
+      selection state
     }
 ```
+
+*Customers reuse `res.partner`; staff reuse `res.users`; documents reuse `ir.attachment`. See [DatabaseDesign.md](../DatabaseDesign.md) for the full Odoo model definitions.*

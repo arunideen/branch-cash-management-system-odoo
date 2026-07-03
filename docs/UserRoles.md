@@ -2,17 +2,18 @@
 
 **Project:** Branch Cash Management System (BCMS) — Prabal Motors Private Limited
 **Source:** `BRD_v1.0.docx` §5, §11, §16, §18
-**Version:** 1.0 · **Date:** 2026-07-01 · **Status:** Draft for Client Review
+**Platform:** Odoo 19 Community Edition — module `branch_cash_management`
+**Version:** 2.0 · **Date:** 2026-07-03 · **Status:** Draft for Client Review
 
-> Phase 5 deliverable. Defines every user role, its responsibilities, permissions, accessible modules, approval rights, restrictions, and the data scope it operates within. The role model drives RBAC and Row Level Security ([SecurityArchitecture.md](./SecurityArchitecture.md), [DatabaseDesign.md](./DatabaseDesign.md)).
+> Defines every user role, its responsibilities, permissions, accessible modules, approval rights, restrictions, and the data scope it operates within. The role model maps to **Odoo security groups** and drives **access rights + record rules** ([SecurityArchitecture.md](./SecurityArchitecture.md), [DatabaseDesign.md](./DatabaseDesign.md)).
 
 ---
 
 ## 1. Role Catalogue
 
-The BRD (§5) names nine roles. Each is defined below with a machine `role_key` used in the database `role` enum and JWT claim.
+The BRD (§5) names nine roles. Each is defined below with a machine `role_key` that maps to an Odoo **security group** (`group_bcms_<role_key>`).
 
-| # | Role | `role_key` | Data Scope | Type |
+| # | Role | `role_key` (→ security group) | Data Scope | Type |
 |---|------|-----------|------------|------|
 | 1 | Sales Advisor | `sales_advisor` | Own branch (own requests) | Operational (Maker) |
 | 2 | Service Advisor | `service_advisor` | Own branch (own requests) | Operational (Maker) |
@@ -24,7 +25,7 @@ The BRD (§5) names nine roles. Each is defined below with a machine `role_key` 
 | 8 | Internal Audit | `internal_audit` | All branches | Oversight (Read-only) |
 | 9 | CFO / Admin | `cfo_admin` | All branches | Super-administrator |
 
-**Data scope model** *(AS-04, AS-22)*: `Branch → Cluster → State → Corporate`. A user's JWT carries `role`, `branch_id`, `cluster_id`, `state_id`. RLS restricts row visibility to the user's scope. Corporate-level roles see all.
+**Data scope model** *(AS-04, AS-22)*: `Branch → Cluster → State → Corporate`. A user's `res.users` record carries the role group(s) plus `bcms_branch_id`, `bcms_cluster_id`, `bcms_state_id`. **Record rules (`ir.rule`)** restrict row visibility to the user's scope. Corporate-level roles see all.
 
 ---
 
@@ -112,7 +113,7 @@ Legend: **C**=Create · **R**=Read · **U**=Update · **A**=Approve/Verify · **
 | Notifications | R *(own)* | R *(own)* | R *(own)* | R *(own)* | R *(own)* | R *(own)* | R *(own)* | R *(own)* |
 | Audit Log | — | — | R *(branch)* | R *(branch)* | R *(cluster)* | R *(corp)* | **R (full)** | R *(all)* |
 
-> The matrix is the source for RLS policy design. See [SecurityArchitecture.md](./SecurityArchitecture.md) §Authorization and the `authz.can(action, resource)` helper.
+> The matrix is the source for **`ir.model.access.csv` and record-rule (`ir.rule`) design**. See [SecurityArchitecture.md](./SecurityArchitecture.md) §3 (Authorization).
 
 ---
 
@@ -126,7 +127,7 @@ Legend: **C**=Create · **R**=Read · **U**=Update · **A**=Approve/Verify · **
 | Bank Deposit | Cashier | Branch Accountant (verify) | — | Needs slip + acknowledgement (BR-07) |
 | Accounting | Branch Accountant | — | — | Status transitions logged (BR-11) |
 
-**Universal rule (BR-03):** the maker of a transaction can never be its checker. Enforced in the application layer and re-validated server-side (Edge Function / DB check).
+**Universal rule (BR-03):** the maker of a transaction can never be its checker. Enforced in the `action_*` method guard and re-validated by `@api.constrains` on the record.
 
 ---
 

@@ -3,128 +3,81 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Branch Dashboard — BCMS</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/styles.css">
+  <title>Dashboard — Branch Cash (Odoo 19 CE)</title>
+  <link rel="stylesheet" href="assets/odoo.css">
 </head>
-<body data-page="dashboard" data-role="Cashier" data-user="Priya Nair">
-  <main class="content">
-    <div class="breadcrumb"><span>BCMS</span><span class="sep">/</span><b>Branch Dashboard</b></div>
-    <div class="page-head">
-      <div class="titles">
-        <h1>Good morning, Priya 👋</h1>
-        <p>Andheri (Service) branch · Wednesday, 02-07-2026 · Day is <b style="color:var(--warning)">open</b></p>
-      </div>
-      <div class="actions">
-        <a class="btn btn-ghost" href="cash-closing.html" data-icon="lock">Start closing</a>
-        <a class="btn btn-primary" href="cashier-queue.html" data-icon="inbox">Open queue</a>
-      </div>
-    </div>
+<body class="o-app" data-menu="dashboard" data-user="Priya Nair" data-role="Cashier">
 
-    <!-- KPI cards -->
-    <div class="grid grid-4 mb-3">
-      <div class="card kpi">
-        <div class="kpi-top"><span class="label" style="margin-top:0">Cash in hand</span><span class="kpi-icon tint-indigo" data-icon="banknote"></span></div>
-        <div class="value">₹1,84,250</div>
-        <div class="delta up" data-icon="chart">Opening ₹1,20,000</div>
-      </div>
-      <div class="card kpi">
-        <div class="kpi-top"><span class="label" style="margin-top:0">Today's collections</span><span class="kpi-icon tint-emerald" data-icon="wallet"></span></div>
-        <div class="value">₹2,46,520</div>
-        <div class="delta up">▲ 12% vs yesterday</div>
-      </div>
-      <div class="card kpi">
-        <div class="kpi-top"><span class="label" style="margin-top:0">Deposited today</span><span class="kpi-icon tint-sky" data-icon="landmark"></span></div>
-        <div class="value">₹1,50,000</div>
-        <div class="delta flat">1 deposit · pending ack</div>
-      </div>
-      <div class="card kpi">
-        <div class="kpi-top"><span class="label" style="margin-top:0">Expenses</span><span class="kpi-icon tint-amber" data-icon="filePlus"></span></div>
-        <div class="value">₹12,270</div>
-        <div class="delta down">▼ 2 vouchers</div>
-      </div>
-    </div>
-
-    <div class="grid cols-2 mb-3">
-      <!-- Collections split + recent -->
-      <div class="card">
-        <div class="card-head">
-          <div><h3>Today's collections</h3><p>Cash vs online · Andheri (Service)</p></div>
-          <div class="actions"><span class="pill">02-07-2026</span></div>
+  <div class="o-cp">
+    <div class="o-cp-top">
+      <div class="o-breadcrumb"><b>Dashboard</b></div>
+      <div class="o-cp-right">
+        <div class="o-search">
+          <span class="o-facet">Andheri (Service)</span>
+          <span class="o-facet">Today</span>
+          <input placeholder="Search...">
         </div>
-        <div class="card-pad">
-          <div class="grid grid-2 mb-2">
-            <div>
-              <div class="small muted">Cash</div>
-              <div style="font-size:22px;font-weight:700" class="num">₹1,64,520</div>
-              <div class="progress" style="margin-top:8px"><span style="width:67%;background:var(--primary)"></span></div>
-            </div>
-            <div>
-              <div class="small muted">Online / UPI / Card</div>
-              <div style="font-size:22px;font-weight:700" class="num">₹82,000</div>
-              <div class="progress" style="margin-top:8px"><span style="width:33%;background:var(--info)"></span></div>
-            </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="o-content o-form-bg">
+    <div class="o-dash">
+      <!-- KPI tiles -->
+      <div class="o-tiles">
+        <div class="o-tile"><div class="o-t-lbl">Cash in hand</div><div class="o-t-val">₹1,84,250</div><div class="o-t-sub deco-muted">Opening ₹1,20,000 (carry-forward)</div></div>
+        <div class="o-tile"><div class="o-t-lbl">Today's collections</div><div class="o-t-val">₹2,46,520</div><div class="o-t-sub deco-success">▲ 12% vs yesterday</div></div>
+        <div class="o-tile"><div class="o-t-lbl">Deposited today</div><div class="o-t-val">₹1,50,000</div><div class="o-t-sub deco-warning">1 deposit · pending ack</div></div>
+        <div class="o-tile"><div class="o-t-lbl">Expenses</div><div class="o-t-val">₹12,270</div><div class="o-t-sub deco-muted">2 vouchers approved</div></div>
+      </div>
+
+      <div class="o-grid2" style="margin-top:14px">
+        <!-- Collections trend graph -->
+        <div class="o-panel" style="margin-top:0">
+          <div class="o-panel-head">Collections — last 6 days
+            <span class="o-badge b-primary"><span class="dot"></span>Cash ▮ Online ▮</span></div>
+          <div class="o-bars">
+            <div class="o-bar"><div class="o-stack"><div class="seg cash" style="height:40%"></div><div class="seg online" style="height:18%"></div></div><div class="cap">Fri</div></div>
+            <div class="o-bar"><div class="o-stack"><div class="seg cash" style="height:46%"></div><div class="seg online" style="height:22%"></div></div><div class="cap">Sat</div></div>
+            <div class="o-bar"><div class="o-stack"><div class="seg cash" style="height:30%"></div><div class="seg online" style="height:14%"></div></div><div class="cap">Mon</div></div>
+            <div class="o-bar"><div class="o-stack"><div class="seg cash" style="height:52%"></div><div class="seg online" style="height:24%"></div></div><div class="cap">Tue</div></div>
+            <div class="o-bar"><div class="o-stack"><div class="seg cash" style="height:44%"></div><div class="seg online" style="height:30%"></div></div><div class="cap">Wed</div></div>
+            <div class="o-bar"><div class="o-stack"><div class="seg cash" style="height:60%"></div><div class="seg online" style="height:26%"></div></div><div class="cap">Today</div></div>
           </div>
-          <div class="divider"></div>
-          <div class="flex justify-between items-center mb-1">
-            <b class="small">Recent receipts</b>
-            <a class="small" href="receipt.html">View all →</a>
+        </div>
+
+        <!-- My activities -->
+        <div class="o-panel" style="margin-top:0">
+          <div class="o-panel-head">My activities</div>
+          <div class="o-panel-body" style="padding:6px 12px 12px">
+            <a href="cashier-queue.html" class="o-between" style="padding:10px;border:1px solid var(--o-border-2);border-radius:6px;margin-top:8px;color:inherit">
+              <span>6 requests to verify <span class="deco-muted">— verification queue</span></span><span class="o-badge b-warning"><span class="dot"></span>To do</span></a>
+            <a href="deposit.html" class="o-between" style="padding:10px;border:1px solid var(--o-border-2);border-radius:6px;margin-top:8px;color:inherit">
+              <span>1 deposit pending acknowledgement <span class="deco-muted">— HDFC ••4021 · ₹1,50,000</span></span><span class="o-badge b-info"><span class="dot"></span>Ack</span></a>
+            <a href="cash-closing.html" class="o-between" style="padding:10px;border:1px solid var(--o-border-2);border-radius:6px;margin-top:8px;color:inherit">
+              <span>End-of-day closing not started <span class="deco-muted">— expected ₹1,72,250</span></span><span class="o-badge b-muted"><span class="dot"></span>Draft</span></a>
+            <div class="o-alert o-alert-warn" style="margin-top:10px" data-svg="alert">
+              <div><b>1 rejected request</b> returned to advisor R. Iyer — awaiting correction (missing invoice copy).</div></div>
           </div>
-          <table class="tbl">
+        </div>
+      </div>
+
+      <!-- Exceptions list -->
+      <div class="o-panel">
+        <div class="o-panel-head">Branch exceptions <a class="btn btn-link btn-sm" href="#">Exception report →</a></div>
+        <div class="o-list-wrap">
+          <table class="o-list">
+            <thead><tr><th class="o-check"></th><th>Type</th><th>Reference</th><th>Detail</th><th>Age</th><th>Owner</th><th class="r">Amount</th></tr></thead>
             <tbody>
-              <tr><td><span class="ref-code">RCPT/AND/2026/0455</span></td><td class="cust"><b>R. Sharma</b></td><td><span class="badge badge-slate">Cash</span></td><td class="money">₹4,520</td></tr>
-              <tr><td><span class="ref-code">RCPT/AND/2026/0454</span></td><td class="cust"><b>Meena K.</b></td><td><span class="badge badge-sky">UPI</span></td><td class="money">₹18,900</td></tr>
-              <tr><td><span class="ref-code">RCPT/AND/2026/0453</span></td><td class="cust"><b>A. Verma</b></td><td><span class="badge badge-indigo">Mixed</span></td><td class="money">₹62,000</td></tr>
+              <tr><td class="o-check">☐</td><td><span class="o-badge b-danger"><span class="dot"></span>Deposit overdue</span></td><td class="o-cell-link">DEP/AND/2026-27/000088</td><td>Awaiting bank acknowledgement</td><td class="deco-danger">1d 4h</td><td>S. Rao</td><td class="r num">₹1,50,000</td></tr>
+              <tr><td class="o-check">☐</td><td><span class="o-badge b-warning"><span class="dot"></span>Cash variance</span></td><td class="o-cell-link">CLS/AND/2026-27/000129</td><td>Physical short — reason recorded</td><td>Yesterday</td><td>Priya Nair</td><td class="r num deco-danger">−₹200</td></tr>
+              <tr><td class="o-check">☐</td><td><span class="o-badge b-muted"><span class="dot"></span>Accounting pending</span></td><td class="o-cell-link">CLS/AND/2026-27/000128</td><td>Not yet posted to Tally</td><td>2d</td><td>Finance</td><td class="r num">₹2,10,400</td></tr>
             </tbody>
           </table>
         </div>
       </div>
-
-      <!-- Pending actions -->
-      <div class="card">
-        <div class="card-head"><div><h3>Needs attention</h3><p>Your pending actions</p></div></div>
-        <div class="card-pad" style="display:grid;gap:12px">
-          <a href="cashier-queue.html" class="flex items-center gap-1" style="padding:12px;border:1px solid var(--border);border-radius:12px;color:inherit">
-            <span class="kpi-icon tint-amber" data-icon="inbox"></span>
-            <div style="flex:1"><b class="small">6 requests in queue</b><div class="tiny muted">Awaiting your verification</div></div>
-            <span class="badge badge-amber">6</span>
-          </a>
-          <a href="deposit.html" class="flex items-center gap-1" style="padding:12px;border:1px solid var(--border);border-radius:12px;color:inherit">
-            <span class="kpi-icon tint-sky" data-icon="landmark"></span>
-            <div style="flex:1"><b class="small">1 deposit pending acknowledgement</b><div class="tiny muted">HDFC ••4021 · ₹1,50,000</div></div>
-            <span class="badge badge-sky">Ack</span>
-          </a>
-          <a href="cash-closing.html" class="flex items-center gap-1" style="padding:12px;border:1px solid var(--border);border-radius:12px;color:inherit">
-            <span class="kpi-icon tint-indigo" data-icon="lock"></span>
-            <div style="flex:1"><b class="small">End-of-day closing not started</b><div class="tiny muted">Expected cash ₹1,72,250</div></div>
-            <span class="badge badge-slate">Open</span>
-          </a>
-          <div class="alert alert-warn" style="margin-top:4px">
-            <span data-icon="alert"></span>
-            <div><b>1 rejected request</b> returned to advisor R. Iyer — awaiting correction (missing invoice copy).</div>
-          </div>
-        </div>
-      </div>
     </div>
-
-    <!-- Exceptions strip -->
-    <div class="card">
-      <div class="card-head"><div><h3>Branch exceptions</h3><p>Items that breach tolerance or SLA — each links to source</p></div>
-        <div class="actions"><a class="small" href="#">Exception dashboard →</a></div>
-      </div>
-      <div class="table-wrap">
-        <table class="tbl">
-          <thead><tr><th>Type</th><th>Reference</th><th>Detail</th><th>Age</th><th>Owner</th><th class="th-right">Amount</th></tr></thead>
-          <tbody>
-            <tr><td><span class="badge badge-red"><span class="bdot"></span>Deposit overdue</span></td><td><span class="ref-code">DEP/AND/0088</span></td><td>Awaiting bank acknowledgement</td><td>1d 4h</td><td>B. Accountant</td><td class="money">₹1,50,000</td></tr>
-            <tr><td><span class="badge badge-amber"><span class="bdot"></span>Cash variance</span></td><td><span class="ref-code">CLS/AND/0129</span></td><td>Physical short — reason recorded</td><td>Yesterday</td><td>Cashier</td><td class="money">−₹200</td></tr>
-            <tr><td><span class="badge badge-slate"><span class="bdot"></span>Accounting pending</span></td><td><span class="ref-code">CLS/AND/0128</span></td><td>Not yet posted to Tally</td><td>2d</td><td>Finance</td><td class="money">₹2,10,400</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </main>
-  <script src="assets/app.js"></script>
+  </div>
+  <script src="assets/odoo.js"></script>
 </body>
 </html>

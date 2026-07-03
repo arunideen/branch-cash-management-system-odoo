@@ -5,12 +5,12 @@
 ```mermaid
 flowchart LR
     subgraph Inputs
-        ADV[Advisor] --> CR[(collection_request)]
-        CASH[Cashier] --> RCPT[(receipt)]
-        CASH --> EXP[(cash_expense)]
-        CASH --> DEP[(bank_deposit)]
-        CASH --> CLS[(cash_closing)]
-        BA[Accountant] --> ACC[(accounting_status)]
+        ADV[Advisor] --> CR[(bcms.collection.request)]
+        CASH[Cashier] --> RCPT[(bcms.receipt)]
+        CASH --> EXP[(bcms.expense)]
+        CASH --> DEP[(bcms.deposit)]
+        CASH --> CLS[(bcms.cash.closing)]
+        BA[Accountant] --> ACC[(bcms.accounting.status)]
     end
     CR --> RCPT
     RCPT --> CLS
@@ -18,9 +18,9 @@ flowchart LR
     DEP --> CLS
     CLS --> ACC
     subgraph Outputs
-        VIEWS[[Reporting Views]] --> RPT[Reports]
+        VIEWS[[read_group / pivot / graph]] --> RPT[Reports]
         VIEWS --> DASH[Dashboards]
-        AUDIT[(audit_log)] --> COMP[Compliance/Audit]
+        AUDIT[(bcms.audit.log)] --> COMP[Compliance/Audit]
     end
     CR --> VIEWS
     RCPT --> VIEWS

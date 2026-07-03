@@ -2,11 +2,12 @@
 
 **Project:** Branch Cash Management System (BCMS) — Prabal Motors Private Limited
 **Source:** `BRD_v1.0.docx` v1.0
-**Version:** 1.0 · **Date:** 2026-07-01 · **Status:** Draft for Client Review
+**Platform:** Odoo 19 Community Edition — module `branch_cash_management`
+**Version:** 2.0 · **Date:** 2026-07-03 · **Status:** Draft for Client Review
 
 > Every functional module from the BRD has user stories with **Given/When/Then** acceptance criteria. Story IDs (`US-<MOD>-##`) map to Requirement IDs from [Requirements.md](./Requirements.md) and are traced in [TraceabilityMatrix.md](./TraceabilityMatrix.md). Format: *As a `<role>`, I want `<capability>`, so that `<benefit>`.*
 
-**INVEST check:** stories are Independent, Negotiable, Valuable, Estimable, Small, Testable. **DoD** (Definition of Done) applies to all: code reviewed, unit+integration tested, RLS verified, audit-logged, responsive, accessible (AA), documented.
+**INVEST check:** stories are Independent, Negotiable, Valuable, Estimable, Small, Testable. **DoD** (Definition of Done) applies to all: code reviewed, unit+integration tested, record rules verified, audit-logged, responsive, accessible (AA), documented.
 
 ---
 
@@ -20,8 +21,8 @@
 
 ### US-MDM-02 — Manage users & roles
 **As a** CFO/Admin, **I want** to create users and assign role + branch/cluster/state, **so that** access is correctly scoped. *(FR-MDM-02, FR-AUTH-02)*
-- **AC1** — *Given* I create a user, *when* I assign a role and branch, *then* their JWT claims reflect that scope on next login.
-- **AC2** — *Given* a non-admin user, *when* they attempt to open User Management, *then* access is denied (RLS + route guard).
+- **AC1** — *Given* I create a user, *when* I assign a role group and branch/cluster/state, *then* their access reflects that scope (groups + record rules) on next login.
+- **AC2** — *Given* a non-admin user, *when* they attempt to open User Management, *then* access is denied (menu hidden + `AccessError` server-side).
 - **AC3** — Deactivating a user immediately blocks login while preserving their historical actions.
 
 ### US-MDM-03 — Manage supporting masters
@@ -36,18 +37,18 @@
 ### US-CR-01 — Raise a collection request
 **As a** Sales/Service Advisor, **I want** to raise a collection request with customer, reference, amount, and mode, **so that** the cashier can collect payment. *(FR-CR-01…04, FR-CR-06)*
 - **AC1** — *Given* mandatory fields (customer, invoice/job-card, amount, expected mode), *when* I submit, *then* a unique Request ID is generated and status = `Submitted`.
-- **AC2** — *Given* a missing mandatory field, *when* I submit, *then* inline Zod validation blocks submission and highlights the field.
+- **AC2** — *Given* a missing mandatory field, *when* I save, *then* Odoo field/constraint validation blocks the save and highlights the field.
 - **AC3** — Amount must be > 0 and within allowed precision (2 decimals, INR).
 
 ### US-CR-02 — Attach mandatory documents
 **As an** Advisor, **I want** to upload mandatory documents, **so that** the request is complete and verifiable. *(FR-CR-05, BR-01)*
 - **AC1** — *Given* no document uploaded, *when* I submit, *then* submission is blocked with "mandatory document required."
 - **AC2** — Accepted types: PDF/JPG/PNG ≤ 10 MB; invalid files are rejected with a clear message.
-- **AC3** — Uploaded files are stored in Supabase Storage and versioned; replacing a file keeps prior versions. *(BR-13)*
+- **AC3** — Uploaded files are stored as Odoo attachments (`ir.attachment`) and versioned; replacing a file keeps prior versions. *(BR-13)*
 
 ### US-CR-03 — Track my requests
 **As an** Advisor, **I want** to see the live status of my requests, **so that** I can act on rejections. *(FR-CR-07/08)*
-- **AC1** — My Requests lists only my requests (RLS branch+owner scope) with status chips (Submitted/Accepted/Rejected/Receipted).
+- **AC1** — My Requests lists only my requests (record-rule branch+owner scope) with status badges (Submitted/Accepted/Rejected/Receipted).
 - **AC2** — *Given* a request is rejected, *when* I open it, *then* I see the cashier's remarks and can correct & resubmit. *(BR-09)*
 
 ---
@@ -163,11 +164,11 @@
 ### US-DASH-01 — Branch dashboard
 **As a** Works Manager/Cashier, **I want** a branch dashboard, **so that** I can monitor my branch's cash position. *(FR-DASH-01/06)*
 - **AC1** — Shows cash-in-hand, today's collections (cash/online), expenses, deposits, pending approvals, variance.
-- **AC2** — Data reflects the agreed freshness window (near real-time via Realtime/refetch).
+- **AC2** — Data reflects the agreed freshness window (near real-time via bus/refresh).
 
 ### US-DASH-02 — State/Corporate dashboards
 **As** Cluster/Corporate Finance, **I want** aggregated dashboards, **so that** I can oversee many branches. *(FR-DASH-02/03)*
-- **AC1** — Cluster user sees only their cluster; corporate sees all (RLS-scoped).
+- **AC1** — Cluster user sees only their cluster; corporate sees all (record-rule-scoped).
 - **AC2** — Drill-down from state → branch is supported.
 
 ### US-DASH-03 — Exception dashboard
@@ -193,7 +194,7 @@
 ### US-NOTIF-01 — Receive workflow notifications
 **As a** user, **I want** in-app notifications for events relevant to my role, **so that** I act without polling. *(FR-NOTIF-01…06)*
 - **AC1** — Triggers: rejected request (advisor), pending approval (approver), pending closing, pending deposit, accounting pending.
-- **AC2** — Notifications are role- and scope-targeted (RLS) and delivered in near real-time (Supabase Realtime).
+- **AC2** — Notifications are role- and scope-targeted (record rules) and delivered in near real-time via Odoo activities/chatter (bus).
 - **AC3** — Users can mark as read; a badge shows unread count.
 
 ---
@@ -202,13 +203,13 @@
 
 ### US-AUTH-01 — Secure login
 **As a** user, **I want** to log in securely, **so that** only authorised staff access the system. *(FR-AUTH-01)*
-- **AC1** — Email/password via Supabase Auth; failed attempts are rate-limited; passwords meet policy.
-- **AC2** — MFA can be enforced for finance/admin roles (R-08).
-- **AC3** — Sessions expire per policy; refresh handled securely.
+- **AC1** — Email/password via Odoo (`res.users`); failed attempts are rate-limited; passwords meet policy.
+- **AC2** — 2FA (`auth_totp`) can be enforced for finance/admin roles (R-08).
+- **AC3** — Sessions expire per policy; handled securely by Odoo.
 
 ### US-AUTH-02 — Enforce role & scope
 **As** the business, **I want** RBAC + data scoping, **so that** users only see/do what's permitted. *(FR-AUTH-02/03, BR-12)*
-- **AC1** — Every table access is governed by RLS using JWT claims; a user in Branch A cannot read Branch B data.
+- **AC1** — Every model access is governed by access rights + record rules using the user's scope; a user in Branch A cannot read Branch B data.
 - **AC2** — Server-side checks re-validate maker ≠ checker on every approval. *(BR-03)*
 
 ### US-AUTH-03 — Complete audit trail

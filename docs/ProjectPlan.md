@@ -2,7 +2,8 @@
 
 **Project:** Branch Cash Management System (BCMS) — Prabal Motors Private Limited
 **Source:** BRD Appendix B (Development Phases) + PRD/SOW
-**Version:** 1.0 · **Date:** 2026-07-01 · **Status:** Draft for Client Review
+**Platform:** Odoo 19 Community Edition — one fully custom module (`branch_cash_management`)
+**Version:** 2.0 · **Date:** 2026-07-03 · **Status:** Draft for Client Review
 
 > Delivery plan: phases, workstreams, milestones, schedule, resource plan, RACI, dependencies, and governance. Estimates are **indicative** pending Discovery and resolution of clarifications ([Assumptions.md](./Assumptions.md)).
 
@@ -12,7 +13,7 @@
 
 - **Methodology:** Agile-iterative with fixed **phase gates** aligned to BRD Appendix B; 2-week sprints; demo + UAT each release.
 - **Definition of Ready:** clarified requirement, acceptance criteria, design, and dependencies known.
-- **Definition of Done:** coded, reviewed, unit+integration+RLS tested, accessible (AA), audit-logged, documented, deployed to staging, UAT-passed.
+- **Definition of Done:** coded, reviewed, unit+integration+record-rule tested (Odoo test framework), accessible (AA), audit-logged, documented, deployed to staging, UAT-passed.
 - **Cadence:** sprint planning, daily stand-up, sprint review/demo, retro; weekly steering check-in with Client PO.
 
 ---
@@ -27,7 +28,7 @@
 | **P3** | Phase 3: Accounting & Reports | ACC, RPT, Notifications | Reports reconcile w/ Tally UAT pass (M4) |
 | **P4** | Phase 4: Dashboards & Integrations | DASH (+ Phase-4 integrations via change order) | Dashboards + go-live (M5) |
 
-**Parallel workstreams throughout:** Security & RLS, QA/automation, DevOps/CI-CD, Documentation, Change management/training.
+**Parallel workstreams throughout:** Security (groups & record rules), QA/automation, DevOps/CI-CD, Documentation, Change management/training.
 
 ---
 
@@ -62,7 +63,7 @@ Indicative build duration ~**22–26 weeks** to go-live (single small team), plu
 |----|-----------|-------|-----------|
 | M0 | Mobilisation | P0 | Team on-boarded, environments provisioned |
 | M1 | Requirements & Design sign-off | P0 | CLR-01…12 resolved; UX & architecture approved |
-| M2 | R1: Collection → Receipt live | P1 | US-CR/CV/RCPT UAT pass; RBAC/RLS verified |
+| M2 | R1: Collection → Receipt live | P1 | US-CR/CV/RCPT UAT pass; RBAC/record rules verified |
 | M3 | R2: Closing & Deposits live | P2 | US-CLS/EXP/DEP + maker-checker UAT pass |
 | M4 | R3: Accounting & Reports | P3 | Reports reconcile w/ Tally (SC-03); notifications |
 | M5 | R4: Dashboards + Go-live | P4 | Dashboards; production; pilot success |
@@ -79,8 +80,8 @@ Indicative build duration ~**22–26 weeks** to go-live (single small team), plu
 | Business Analyst | ● | ● | ◑ | ◑ | ◑ | ◑ |
 | Solution/Tech Architect | ● | ◑ | ◑ | ◑ | ◑ | ○ |
 | UI/UX Designer | ● | ● | ◑ | ○ | ◑ | ○ |
-| Frontend Eng (1–2) | ○ | ● | ● | ● | ● | ◑ |
-| Backend Eng (1–2) | ◑ | ● | ● | ● | ● | ◑ |
+| Odoo Dev — FE: views/OWL/QWeb (1–2) | ○ | ● | ● | ● | ● | ◑ |
+| Odoo Dev — BE: models/security (1–2) | ◑ | ● | ● | ● | ● | ◑ |
 | QA Engineer | ○ | ● | ● | ● | ● | ◑ |
 | DevOps (shared) | ◑ | ◑ | ○ | ○ | ◑ | ◑ |
 
@@ -97,9 +98,9 @@ Indicative build duration ~**22–26 weeks** to go-live (single small team), plu
 | Clarifications & scope baseline | A | C | R | I | I | A | C |
 | Architecture & security design | C | R | C | C | I | A | I |
 | UX design & approval | C | C | R | I | I | A | C |
-| DB/API implementation | A | C | I | R | C | I | I |
-| Feature build | A | C | C | R | C | I | I |
-| Testing (unit→E2E, RLS) | A | C | I | C | R | I | I |
+| Models/methods implementation | A | C | I | R | C | I | I |
+| Feature build (views/security/reports) | A | C | C | R | C | I | I |
+| Testing (unit→E2E, record rules) | A | C | I | C | R | I | I |
 | UAT | C | I | C | I | C | A | R |
 | Security review/pen-test | A | R | I | C | C | A | I |
 | Go-live approval | C | C | C | I | C | A | C |
@@ -113,7 +114,7 @@ A=Accountable · R=Responsible · C=Consulted · I=Informed.
 
 - **Critical path:** Clarifications (M1) → Masters/Auth (P1) → Closing/Approvals (P2) → Accounting/Reports (P3) → Go-live (M5).
 - **External:** receipt/GST format (CLR-04) blocks RCPT; volumes (CLR-03) inform sizing; org/master data & opening balances block cut-over; Tally/Bank APIs (Phase 4) gated by client access.
-- **Internal:** design system before feature build; RLS foundation before any data screen; audit + numbering utilities before receipts/closings.
+- **Internal:** base views/theming before feature build; security foundation (groups + record rules) before any data screen; audit + `ir.sequence` numbering before receipts/closings.
 
 ---
 
@@ -122,16 +123,16 @@ A=Accountable · R=Responsible · C=Consulted · I=Informed.
 | Env | Purpose | Promotion |
 |-----|---------|-----------|
 | Development | Feature work | PR → CI |
-| Staging | UAT/integration | Merge to main → auto-deploy + migrations |
-| Production | Live | Tagged release → CD + PITR safety |
+| Staging | UAT/integration | Merge to main → auto-deploy + module upgrade |
+| Production | Live | Tagged release → CD + backup safety |
 
-Versioned DB migrations, Edge Function deploys, instant frontend rollback. Feature flags for phased enablement.
+Model-driven schema updates via module upgrade (`-u branch_cash_management`), Docker image rollback, daily backups. Feature flags / staged menu access for phased enablement.
 
 ---
 
 ## 9. Quality Gates
 
-Each phase gate requires: acceptance criteria met, RLS/security tests green, performance within targets, documentation updated, and Client PO UAT sign-off. Go-live additionally requires pen-test remediation and pilot-branch success.
+Each phase gate requires: acceptance criteria met, record-rule/security tests green, performance within targets, documentation updated, and Client PO UAT sign-off. Go-live additionally requires pen-test remediation and pilot-branch success.
 
 ---
 

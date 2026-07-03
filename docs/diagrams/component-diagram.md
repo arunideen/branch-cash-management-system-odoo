@@ -4,36 +4,35 @@
 
 ```mermaid
 graph TB
-    subgraph FE["Next.js Frontend"]
-        RG["Route Guards / Middleware"]
-        QC["TanStack Query Cache"]
-        SC["Supabase Client (ssr)"]
-        RTC["Realtime Client"]
+    subgraph FE["Odoo Web Client (browser)"]
+        RG["Action Manager / Menus"]
+        VW["Views (list/form/kanban/pivot/graph)"]
+        OWL["OWL Dashboard Components"]
     end
-    subgraph BE["Supabase Backend"]
-        GT["GoTrue Auth"]
-        HOOK["Custom Access Token Hook"]
-        PR["PostgREST"]
-        subgraph EFG["Edge Functions"]
-            EF1["issue-receipt"]
-            EF2["finalise-closing"]
-            EF3["verify-deposit"]
-            EF4["post-accounting"]
-            EF5["notify-dispatch"]
-            EF6["cron-overdue"]
+    subgraph BE["Odoo Server"]
+        HTTP["HTTP / JSON-RPC dispatcher"]
+        REG["Registry (loaded models)"]
+        subgraph LOGIC["branch_cash_management methods"]
+            L1["action_issue_receipt"]
+            L2["action_finalise_closing"]
+            L3["action_verify_deposit"]
+            L4["action_mark_accounted"]
+            L5["cron_overdue / cron_carry_forward"]
         end
-        DB[("PostgreSQL")]
-        RLS["RLS Policies"]
-        TRG["Triggers (audit, cash-balance)"]
-        VW["Reporting Views"]
+        SECR["Record Rules + ACLs"]
+        SEQ["ir.sequence"]
+        ATT["ir.attachment"]
+        MAILT["mail.thread / activities"]
+        ORM["ORM"]
     end
-    RG --> SC --> GT --> HOOK
-    SC --> PR --> RLS --> DB
-    RTC --> DB
-    SC --> EF1 & EF2 & EF3 & EF4
-    EF1 & EF2 & EF3 & EF4 --> DB
-    DB --> TRG
-    DB --> VW
-    EF5 --> DB
-    EF6 --> DB
+    DB[("PostgreSQL")]
+    FS[["Filestore"]]
+    RG --> HTTP --> REG --> LOGIC
+    LOGIC --> SECR
+    LOGIC --> SEQ
+    LOGIC --> MAILT
+    LOGIC --> ORM --> DB
+    ATT --> FS
+    OWL --> HTTP
+    VW --> HTTP
 ```

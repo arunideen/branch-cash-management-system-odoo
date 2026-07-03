@@ -4,7 +4,8 @@
 **Client:** Prabal Motors Private Limited (PMPL) ("Client")
 **Vendor:** [Delivery Partner] ("Vendor")
 **Source BRD:** `BRD_v1.0.docx` v1.0
-**Document Version:** 1.0 · **Date:** 2026-07-01 · **Status:** Draft for Sign-off
+**Platform:** Odoo 19 Community Edition — one fully custom module (`branch_cash_management`)
+**Document Version:** 2.0 · **Date:** 2026-07-03 · **Status:** Draft for Sign-off
 
 > This SOW is a **template for client sign-off**. Bracketed `[…]` items (dates, rates, names, durations) are to be finalised during contracting. Effort/timeline figures are **indicative planning estimates** pending resolution of the open clarifications ([Assumptions.md](./Assumptions.md)).
 
@@ -12,7 +13,7 @@
 
 ## 1. Project Overview
 
-The Vendor will design, build, test, and deploy the **Branch Cash Management System (BCMS)** — a responsive web/mobile application that digitises PMPL's branch cash lifecycle (collection request → cashier verification → receipt → cash closing → maker-checker approval → bank deposit → Tally accounting) with role-based access, complete audit trail, dashboards, and reports. The solution is delivered on **Next.js + Supabase** per the agreed architecture ([TechnicalArchitecture.md](./TechnicalArchitecture.md)).
+The Vendor will design, build, test, and deploy the **Branch Cash Management System (BCMS)** — **one fully custom Odoo 19 Community Edition module** (`branch_cash_management`), used through the responsive Odoo web client, that digitises PMPL's branch cash lifecycle (collection request → cashier verification → receipt → cash closing → maker-checker approval → bank deposit → Tally accounting) with role-based access, complete audit trail, dashboards, and reports — per the agreed architecture ([TechnicalArchitecture.md](./TechnicalArchitecture.md)).
 
 ---
 
@@ -26,9 +27,9 @@ Per BRD §3 and PRD §3: digitise cash collection; standardise Sales & Service o
 
 ### 3.1 In Scope (v1)
 The twelve functional modules and controls listed in [PRD.md](./PRD.md) §6:
-Master Data · Collection Request · Cashier Verification · Receipt · Cash Expense · Cash Closing · Approval Workflow · Bank Deposit · Accounting Update (manual Tally entry) · Dashboards · Reports (9) · Notifications (in-app) · Security & Audit (RBAC, RLS, audit trail, no-delete, document versioning).
+Master Data · Collection Request · Cashier Verification · Receipt · Cash Expense · Cash Closing · Approval Workflow · Bank Deposit · Accounting Update (manual Tally entry) · Dashboards · Reports (9) · Notifications (in-app) · Security & Audit (RBAC via groups + record rules, audit trail, no-delete, document versioning).
 
-Includes: UX/UI design, database & API implementation, RLS/security, testing, deployment (dev/staging/prod), documentation, training, and warranty/hypercare as defined below.
+Includes: view/UX design, model & business-logic implementation, security (groups/record rules/ACLs), testing, deployment (dev/staging/prod), documentation, training, and warranty/hypercare as defined below.
 
 ### 3.2 Out of Scope (v1)
 Per [PRD.md](./PRD.md) §7: live Tally API, bank API, WhatsApp/SMS, Power BI/Zoho BI, OCR, payment-gateway online collection, offline/PWA, customer portal, and full DMS/billing/inventory. These are candidates for Phase 4+ change orders.
@@ -40,12 +41,12 @@ Per [PRD.md](./PRD.md) §7: live Tally API, bank API, WhatsApp/SMS, Power BI/Zoh
 | # | Deliverable | Acceptance artifact |
 |---|-------------|---------------------|
 | D1 | **Discovery & clarifications sign-off** (resolve CLR-01…12) | Signed requirements baseline |
-| D2 | **UX/UI designs** (wireframes → design system) | Approved designs ([UIUX.md](./UIUX.md)) |
-| D3 | **Database schema & migrations** (Supabase) | Migrations + RLS test pass ([DatabaseDesign.md](./DatabaseDesign.md)) |
-| D4 | **API & Edge Functions** | Working endpoints + docs ([APIDesign.md](./APIDesign.md)) |
-| D5 | **Application (R1–R4)** per release plan | Deployed, demoed, UAT-passed builds |
-| D6 | **Security implementation** (RBAC, RLS, audit) | Security review + pen-test report ([SecurityArchitecture.md](./SecurityArchitecture.md)) |
-| D7 | **Test suites & reports** | Unit/integration/E2E/RLS results |
+| D2 | **UX/UI designs** (view mockups → Odoo views) | Approved designs ([UIUX.md](./UIUX.md)) |
+| D3 | **Odoo data model** (models, fields, constraints, sequences) | Module installs/upgrades + record-rule tests pass ([DatabaseDesign.md](./DatabaseDesign.md)) |
+| D4 | **Model methods & interfaces** (action_*, External API) | Working methods + docs ([APIDesign.md](./APIDesign.md)) |
+| D5 | **Module build (R1–R4)** per release plan | Deployed, demoed, UAT-passed builds |
+| D6 | **Security implementation** (groups, record rules, audit) | Security review + pen-test report ([SecurityArchitecture.md](./SecurityArchitecture.md)) |
+| D7 | **Test suites & reports** | Odoo test-suite results (models/constraints/record rules/flows) |
 | D8 | **Deployment & environments** | Dev/Staging/Prod operational |
 | D9 | **Documentation** | This docs set + admin/user guides |
 | D10 | **Training & handover** | Trained users; recorded sessions |
@@ -60,7 +61,8 @@ Full register in [Assumptions.md](./Assumptions.md). Key delivery assumptions:
 - v1 Tally integration is **manual entry**; online collection is **reference capture** (no gateway).
 - Notifications are **in-app**; branches are **online-first** with adequate connectivity/devices.
 - Client provides org/master data, opening cash balances, receipt/GST format, branding, and timely UAT.
-- Single production environment on managed Supabase + Vercel (India-appropriate region).
+- Delivered on **Odoo 19 Community Edition (LGPL-3)** — no Odoo Enterprise licence required; the module ships under LGPL-3.
+- Self-hosted production on **Odoo 19 CE + PostgreSQL (Docker/nginx)** in an India-appropriate region, plus staging/dev.
 
 ---
 
@@ -139,11 +141,11 @@ gantt
 | Engagement/Project Manager | Delivery, planning, risk, comms | Part-time |
 | Business Analyst | Requirements, clarifications, UAT | Part→full early |
 | Solution/Tech Architect | Architecture, security, reviews | Part-time |
-| UI/UX Designer | Designs, design system | Front-loaded |
-| Frontend Engineer(s) | Next.js/React implementation | Full-time |
-| Backend Engineer(s) | Supabase, RLS, Edge Functions | Full-time |
-| QA Engineer | Test plans, automation, UAT support | Full-time (from P1) |
-| DevOps (shared) | CI/CD, environments | Part-time |
+| UI/UX Designer | View design, module theming | Front-loaded |
+| Odoo Developer(s) — backend | Models, business logic, security, sequences | Full-time |
+| Odoo Developer(s) — frontend | Views, OWL dashboards/widgets, QWeb reports | Full-time |
+| QA Engineer | Test plans, Odoo test automation, UAT support | Full-time (from P1) |
+| DevOps (shared) | CI/CD, Docker, environments | Part-time |
 
 **Client-side:** Product Owner (CFO/Admin or delegate), Finance SME, IT coordinator, pilot-branch users for UAT.
 
@@ -163,14 +165,14 @@ R=Responsible · A=Accountable · C=Consulted · I=Informed. Full RACI in [Proje
 
 ## 11. Technology Stack
 
-Per [TechnicalArchitecture.md](./TechnicalArchitecture.md): **Frontend** Next.js, React, TypeScript, Tailwind, shadcn/ui, React Hook Form, Zod, TanStack Query. **Backend** Supabase (PostgreSQL, Auth, RLS, Edge Functions, Realtime, Storage, Scheduled Jobs). **Hosting** Vercel + managed Supabase. **CI/CD** GitHub Actions.
+Per [TechnicalArchitecture.md](./TechnicalArchitecture.md): **Platform** Odoo 19 Community Edition (LGPL-3) — one custom module `branch_cash_management` depending only on core `base`, `mail`, `web`. **Language** Python (models/business logic) + XML/OWL (views, dashboards) + QWeb (reports). **Database** PostgreSQL. **Security** security groups + record rules (`ir.rule`) + `ir.model.access.csv`; auth via `res.users` (+ optional `auth_totp`). **Framework services** `ir.sequence`, `ir.attachment`, `mail.thread`/activities, `ir.cron`. **Hosting** self-hosted Odoo + PostgreSQL in Docker behind nginx. **CI/CD** GitHub Actions (flake8/pylint-odoo, Odoo tests, Docker build, module upgrade).
 
 ---
 
 ## 12. Acceptance Criteria
 
 - Each release meets the acceptance criteria in [UserStories.md](./UserStories.md) and the BRD acceptance criteria (SC-01…06): end-to-end workflow without manual register; all approvals captured; reports reconcile with Tally; complete audit trail.
-- RLS/security tests pass (no cross-branch leakage; maker-checker enforced).
+- Security tests pass (record rules: no cross-branch leakage; maker-checker enforced).
 - Performance targets met (search ≤ 2s; P95 ≤ 3s).
 - UAT sign-off by Client Product Owner per release.
 
@@ -178,13 +180,13 @@ Per [TechnicalArchitecture.md](./TechnicalArchitecture.md): **Frontend** Next.js
 
 ## 13. Testing
 
-Per [PRD.md](./PRD.md) and the testing strategy (see [TechnicalArchitecture.md](./TechnicalArchitecture.md) §2.3 and this SOW): unit, integration, system, regression, performance, security (incl. RLS + pen-test), and UAT. Test evidence delivered per release (D7).
+Per [PRD.md](./PRD.md) and the testing strategy (see [TechnicalArchitecture.md](./TechnicalArchitecture.md) §2.3 and this SOW): unit, integration, system, regression, performance, security (incl. record-rule isolation + pen-test), and UAT — using the Odoo test framework. Test evidence delivered per release (D7).
 
 ---
 
 ## 14. Deployment
 
-Dev/Staging/Production environments; versioned DB migrations; Edge Function deploys; instant frontend rollback; PITR for data. Go-live via **pilot branch(es)** → phased network rollout ([ProjectPlan.md](./ProjectPlan.md)).
+Dev/Staging/Production environments; model-driven schema updates via module upgrade (`-u branch_cash_management`); Docker image tag rollback; daily backups + tested restore for data. Go-live via **pilot branch(es)** → phased network rollout ([ProjectPlan.md](./ProjectPlan.md)).
 
 ---
 
@@ -214,7 +216,7 @@ Dev/Staging/Production environments; versioned DB migrations; Edge Function depl
 
 ## 17. Risk Management
 
-Managed per [RiskAssessment.md](./RiskAssessment.md); reviewed at each phase gate. Top risks (scope creep, RLS isolation, fraud controls, financial-calc bugs, Tally gap, adoption, connectivity) have defined mitigations and owners.
+Managed per [RiskAssessment.md](./RiskAssessment.md); reviewed at each phase gate. Top risks (scope creep, record-rule data isolation, fraud controls, financial-calc bugs, Tally gap, adoption, connectivity) have defined mitigations and owners.
 
 ---
 

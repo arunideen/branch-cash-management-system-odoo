@@ -2,7 +2,10 @@
 
 **Project:** Branch Cash Management System (BCMS) — Prabal Motors Private Limited
 **Source:** `BRD_v1.0.docx` v1.0
-**Version:** 1.0 · **Date:** 2026-07-01 · **Status:** Draft for Client Review
+**Platform:** Odoo 19 Community Edition — one fully custom module (`branch_cash_management`)
+**Version:** 2.0 · **Date:** 2026-07-03 · **Status:** Draft for Client Review
+
+> **v2.0 change:** the delivery platform is now **Odoo 19 Community Edition** (a single custom module), replacing the previously proposed Next.js + Supabase stack. Business, cash-operations, approval and data assumptions are unchanged; the **technical/data assumptions (§4)** and the auth/scoping assumptions (AS-21, AS-22) have been re-expressed in Odoo terms, and new Odoo-platform assumptions (AS-31…AS-36) added.
 
 ---
 
@@ -22,7 +25,7 @@ The BRD is deliberately concise and leaves several operational and technical det
 | AS-01 | **"Online collections"** means card / UPI / net-banking / cheque payments captured with a **transaction reference number**, entered manually by the Cashier — not a live payment-gateway integration in v1. | BRD §9 says "capture … online reference"; payment gateway not mentioned. Gateway is a natural future enhancement. | Medium | Medium — adds a gateway integration if wrong (CR/CV/RCPT). ⚠ Needs confirmation (CLR-01). |
 | AS-02 | The system covers **cash and online receipts against Invoices (Sales) and Job Cards (Service)** only; it is **not** a full billing/DMS/POS system. Invoice/Job Card numbers are entered as references. | BRD scope §4 lists collections, not invoicing. | High | Medium — expands scope significantly if wrong. |
 | AS-03 | **Tally integration in v1 is manual**: users key in Tally voucher number/date/ledger/status. A live Tally XML/HTTP API is a **Phase-4 future enhancement**. | BRD §3 "Integrate with Tally in **future**"; §21 lists "Tally API" under Future Enhancements. | High | High — live API is significant effort (CLR-02). |
-| AS-04 | The organisational hierarchy is **Branch → Cluster → State → Corporate**. Dashboards and data scoping follow this hierarchy. | BRD §16 lists Branch/State/Corporate dashboards; §5 lists Cluster Finance. | Medium | Medium — RLS/scoping model changes (CLR-06). |
+| AS-04 | The organisational hierarchy is **Branch → Cluster → State → Corporate**. Dashboards and data scoping follow this hierarchy. | BRD §16 lists Branch/State/Corporate dashboards; §5 lists Cluster Finance. | Medium | Medium — record-rule/scoping model changes (CLR-06). |
 | AS-05 | Each branch is typed as **Sales**, **Service**, or **Both**; a single cash workflow serves both verticals with a vertical flag on the request. | BRD §2 "across Sales and Service"; §4 lists both. | High | Low. |
 | AS-06 | **Customers are not system users.** They interact physically at the branch/cashier. No customer-facing portal in v1. | No customer login mentioned; §6 "Customer approaches cashier." | High | Medium — a portal is a large addition. |
 | AS-07 | The **currency is INR (₹)** and all operations are within **India** (timezone IST, DD-MM-YYYY dates). | Prabal Motors is an Indian dealership; Tally usage. | High | Low. |
@@ -49,21 +52,32 @@ The BRD is deliberately concise and leaves several operational and technical det
 | AS-18 | **Expense approval** uses a single approver (the named "Approver"); approval thresholds by amount are **not** defined in v1 but are a recommended enhancement. | BRD §12 lists "Approver" only. | Medium | Medium ⚠ (CLR-05). |
 | AS-19 | **Cluster Finance, Corporate Finance, Internal Audit, and CFO/Admin** are primarily **read/oversight** roles (dashboards, reports, audit) with limited or no transaction entry rights. Internal Audit is **read-only**. | BRD role names + §16 dashboard hierarchy. | Medium | Low. |
 | AS-20 | **CFO/Admin** is the super-administrator with master-data and user-management rights. | "Admin" in role name; §Appendix A "Admin Masters." | High | Low. |
-| AS-21 | Authentication is **email/password via Supabase Auth** with strong password policy and optional MFA (recommended). No corporate SSO in v1 unless requested. | BRD §18 "Role-based access"; stack directive uses Supabase. | Medium | Medium ⚠ (CLR-12). |
-| AS-22 | **Row Level Security (RLS)** enforces branch/cluster/state data scoping using JWT app-metadata claims (role, branch_id, cluster_id, state_id). | Supabase best practice; BRD data-scoping intent. | High | Low. |
+| AS-21 | Authentication is **email/password via Odoo's built-in `res.users`** with a strong password policy and **optional two-factor auth (`auth_totp`)**. No corporate SSO in v1 unless requested (available later via `auth_oauth`). All staff are **internal users** (no portal/customer login — consistent with AS-06). | BRD §18 "Role-based access"; Odoo native auth. | Medium | Medium ⚠ (CLR-12). |
+| AS-22 | Branch/cluster/state data scoping is enforced by **Odoo security groups + record rules (`ir.rule`)** plus model access rights (`ir.model.access.csv`), keyed off the user's `branch_id`/`cluster_id`/`state_id` and role groups. | Odoo native authorization; BRD data-scoping intent. | High | Low. |
 
 ## 4. Technical & Data Assumptions
 
 | ID | Assumption | Rationale | Confidence | Impact if wrong |
 |----|------------|-----------|------------|-----------------|
-| AS-23 | **Document uploads** (mandatory docs, deposit slips, acknowledgements, expense bills) are **images/PDF**, stored in **Supabase Storage** with **version history** (BR-13). Max size ~10 MB/file (configurable). | BRD §8, §13, §18; stack directive. | High | Low. |
-| AS-24 | **Soft delete** is implemented via `deleted_at` / status columns; RLS hides soft-deleted rows from normal reads while retaining them for audit. | BRD §18 "No physical delete." | High | Low. |
-| AS-25 | **Notifications in v1 are in-app** (Supabase Realtime + a notifications table). Email is a low-effort optional add; **WhatsApp is deferred** to Phase 4. | BRD §17 vs §21 (WhatsApp under Future). | High | Low. |
-| AS-26 | **Reporting is operational** (transactional reports from Postgres). Advanced BI (Power BI / Zoho) is **deferred** to Phase 4. | BRD §21. | High | Low. |
-| AS-27 | The application is **online-first** (SaaS). **Offline capability is not required** in v1; branches are assumed to have reliable connectivity. | BRD does not mention offline. | Low | High ⚠ — offline is a major architectural change (CLR-10). |
-| AS-28 | **Data volumes** are moderate (assume ≤ a few hundred branches, low-thousands of transactions/day network-wide). Architecture scales well beyond this. | No figures in BRD. | Low | Medium ⚠ (CLR-03). |
-| AS-29 | **Deployment**: frontend on **Vercel**, backend on **Supabase (managed, India/Singapore region)**. Single production environment plus staging/dev. | Stack directive. | Medium | Low. |
-| AS-30 | **Receipt numbering** is unique & sequential **per branch and financial year** (e.g., `BR001/2026-27/000123`), non-editable once issued. GST/tax fields excluded unless the receipt is a tax document (to confirm). | Indian statutory practice; BRD silent. | Low | Medium ⚠ (CLR-04). |
+| AS-23 | **Document uploads** (mandatory docs, deposit slips, acknowledgements, expense bills) are **images/PDF**, stored as **Odoo attachments (`ir.attachment`)** on the related record, with **version history** (BR-13). Max size configurable via `web.max_file_upload_size` (~10 MB default). | BRD §8, §13, §18; Odoo native filestore. | High | Low. |
+| AS-24 | **Soft delete** is implemented via Odoo **archiving** (`active` boolean); archived rows are hidden from normal views but retained for audit (Internal Audit can view them). See AS-34. | BRD §18 "No physical delete." | High | Low. |
+| AS-25 | **Notifications in v1 are in-app** via Odoo's **chatter messages and activities (`mail.thread` / `mail.activity`)**; email is a low-effort optional add (mail templates + outgoing mail server); **WhatsApp is deferred** to Phase 4. | BRD §17 vs §21 (WhatsApp under Future). | High | Low. |
+| AS-26 | **Reporting is operational** (Odoo list/pivot/graph views + QWeb PDF reports over the module's data). Advanced BI (Power BI / Zoho) is **deferred** to Phase 4. | BRD §21. | High | Low. |
+| AS-27 | The application is **online-first**. **Offline capability is not required** in v1; branches are assumed to have reliable connectivity to the Odoo server. | BRD does not mention offline. | Low | High ⚠ — offline is a major architectural change (CLR-10). |
+| AS-28 | **Data volumes** are moderate (assume ≤ a few hundred branches, low-thousands of transactions/day network-wide). The Odoo/PostgreSQL deployment scales well beyond this with indexing and a workers/reverse-proxy setup. | No figures in BRD. | Low | Medium ⚠ (CLR-03). |
+| AS-29 | **Deployment**: **self-hosted Odoo 19 CE + PostgreSQL in Docker behind nginx** on a VPS in an India region. Single production environment plus staging/dev (each a database on the Odoo server). | Stack decision (2026-07-03). | Medium | Low. |
+| AS-30 | **Receipt numbering** is unique & sequential **per branch and financial year** (e.g., `BR001/2026-27/000123`), non-editable once issued, implemented with **`ir.sequence`** (per-branch/FY subsequences). GST/tax fields excluded unless the receipt is a tax document (to confirm). | Indian statutory practice; BRD silent. | Low | Medium ⚠ (CLR-04). |
+
+### Odoo Platform Assumptions (v2.0)
+
+| ID | Assumption | Rationale | Confidence | Impact if wrong |
+|----|------------|-----------|------------|-----------------|
+| AS-31 | BCMS is delivered as **one fully custom Odoo 19 CE module** (`branch_cash_management`), self-contained, depending only on Odoo core **`base`, `mail`, `web`**. All business entities are custom models; `res.partner`/`res.users` are reused for customers/staff. | Stack decision; "single custom module." | High | Medium — splitting into multiple modules would change packaging/effort. |
+| AS-32 | **No Odoo Enterprise-only features** are used (no Studio, enterprise Accounting, Documents, Sign, or Spreadsheet dashboards). Everything is achievable on Community Edition (LGPL-3). | CE licensing constraint. | High | Medium — an Enterprise dependency would change licensing/cost. |
+| AS-33 | **Tally remains the accounting system of record.** The module keeps a **custom accounting-status model** and **does not depend on Odoo's `account` app**; posting to Tally is manual in v1, API later (AS-03). | Stack decision; BRD Tally scope. | High | Medium ⚠ — using Odoo Accounting instead would restructure the accounting module (CLR-02). |
+| AS-34 | **Soft delete = Odoo archiving** (`active` boolean). No physical delete is exposed: models grant **no `unlink` access rights** to business roles; cancellation/reversal is used for financial records (BR-05). | Odoo idiomatic; BRD "no physical delete." | High | Low. |
+| AS-35 | **Audit trail** uses Odoo **field tracking (chatter, `mail.thread`)** for change history plus a dedicated **append-only `bcms.audit.log`** model for security/action events. | Odoo native + BRD immutable-audit intent. | High | Low. |
+| AS-36 | **Privileged/atomic operations** (issue receipt, finalise closing, verify deposit, mark accounted) are implemented as **model methods** (`action_*`) guarded by groups, record rules and `@api.constrains`, running in Odoo's per-request DB transaction (with `sudo()` only where a controlled elevation is needed). | Odoo server-authoritative model. | High | Low. |
 
 ---
 
@@ -98,6 +112,9 @@ These mirror Requirements.md §12. Ordered by priority; each references the assu
 
 | Date | Clarification | Decision | Decided By | Updates Assumption |
 |------|---------------|----------|------------|--------------------|
+| 2026-07-03 | Platform | **Build on Odoo 19 Community Edition as one fully custom module** (`branch_cash_management`), replacing the proposed Next.js + Supabase stack. | Project owner | AS-21, AS-22, AS-23, AS-25, AS-26, AS-29, AS-30, AS-31…AS-36 |
+| 2026-07-03 | Accounting | **Keep Tally as the ledger** with a custom accounting-status model; module does **not** depend on Odoo `account`. | Project owner | AS-03, AS-33 |
+| 2026-07-03 | Deployment | **Self-hosted Odoo CE + PostgreSQL in Docker/nginx** on an India-region VPS. | Project owner | AS-29 |
 | _pending_ | CLR-01 | _awaiting client_ | | AS-01 |
 | _pending_ | CLR-02 | _awaiting client_ | | AS-03 |
 | … | … | … | | |
