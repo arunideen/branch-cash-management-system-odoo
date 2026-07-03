@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>User Management — BCMS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-page="users" data-role="CFO / Admin" data-user="Neha Kapoor">
+  <main class="content">
+    <div class="breadcrumb"><span>Administration</span><span class="sep">/</span><b>User Management</b></div>
+    <div class="page-head">
+      <div class="titles">
+        <h1>Users, roles & scope</h1>
+        <p>Role drives permissions (RBAC) and row-level data visibility. Nine roles across Branch → Cluster → Corporate scope.</p>
+      </div>
+      <div class="actions">
+        <button class="btn btn-primary" data-open-modal="newUser" data-icon="plus">Add user</button>
+      </div>
+    </div>
+
+    <div class="grid grid-4 mb-3">
+      <div class="card kpi"><div class="kpi-top"><span class="label" style="margin-top:0">Total users</span><span class="kpi-icon tint-indigo" data-icon="users"></span></div><div class="value">42</div><div class="delta flat">across 4 branches</div></div>
+      <div class="card kpi"><div class="kpi-top"><span class="label" style="margin-top:0">Active</span><span class="kpi-icon tint-emerald" data-icon="check"></span></div><div class="value">39</div><div class="delta up">MFA enrolled 37</div></div>
+      <div class="card kpi"><div class="kpi-top"><span class="label" style="margin-top:0">Approvers</span><span class="kpi-icon tint-sky" data-icon="shield"></span></div><div class="value">11</div><div class="delta flat">WM + Accountant</div></div>
+      <div class="card kpi"><div class="kpi-top"><span class="label" style="margin-top:0">Suspended</span><span class="kpi-icon tint-amber" data-icon="lock"></span></div><div class="value">3</div><div class="delta down">review pending</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div><h3>All users</h3><p>Role, scope & maker–checker guardrails</p></div>
+        <div class="actions">
+          <div class="search-inline"><span data-icon="search" style="font-size:0"></span><input placeholder="Search name / email"></div>
+          <button class="btn btn-ghost btn-sm" data-icon="filter">Role</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="tbl">
+          <thead><tr><th>User</th><th>Role</th><th>Scope</th><th>Rights</th><th>MFA</th><th>Status</th><th class="th-right">Actions</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="cust"><div class="avatar">PN</div><div><b>Priya Nair</b><small>priya.nair@prabalmotors.in</small></div></td>
+              <td><span class="badge badge-indigo">Cashier</span></td>
+              <td class="small">Andheri (Service)</td>
+              <td class="small muted">Maker</td>
+              <td><span class="badge badge-emerald">On</span></td>
+              <td><span class="badge badge-emerald"><span class="bdot"></span>Active</span></td>
+              <td class="td-right"><button class="btn btn-ghost btn-sm" data-icon="edit">Edit</button></td>
+            </tr>
+            <tr>
+              <td class="cust"><div class="avatar">RI</div><div><b>Rahul Iyer</b><small>rahul.iyer@prabalmotors.in</small></div></td>
+              <td><span class="badge badge-sky">Service Advisor</span></td>
+              <td class="small">Andheri (Service)</td>
+              <td class="small muted">Maker</td>
+              <td><span class="badge badge-emerald">On</span></td>
+              <td><span class="badge badge-emerald"><span class="bdot"></span>Active</span></td>
+              <td class="td-right"><button class="btn btn-ghost btn-sm" data-icon="edit">Edit</button></td>
+            </tr>
+            <tr>
+              <td class="cust"><div class="avatar">AD</div><div><b>Ajit Deshpande</b><small>ajit.d@prabalmotors.in</small></div></td>
+              <td><span class="badge badge-amber">Works Manager</span></td>
+              <td class="small">Andheri (Service)</td>
+              <td class="small muted">Checker L1</td>
+              <td><span class="badge badge-emerald">On</span></td>
+              <td><span class="badge badge-emerald"><span class="bdot"></span>Active</span></td>
+              <td class="td-right"><button class="btn btn-ghost btn-sm" data-icon="edit">Edit</button></td>
+            </tr>
+            <tr>
+              <td class="cust"><div class="avatar">SR</div><div><b>Sanjay Rao</b><small>sanjay.rao@prabalmotors.in</small></div></td>
+              <td><span class="badge badge-amber">Branch Accountant</span></td>
+              <td class="small">Andheri (Service)</td>
+              <td class="small muted">Checker L2 · Finance</td>
+              <td><span class="badge badge-emerald">On</span></td>
+              <td><span class="badge badge-emerald"><span class="bdot"></span>Active</span></td>
+              <td class="td-right"><button class="btn btn-ghost btn-sm" data-icon="edit">Edit</button></td>
+            </tr>
+            <tr>
+              <td class="cust"><div class="avatar">VM</div><div><b>Vikram Menon</b><small>vikram.menon@prabalmotors.in</small></div></td>
+              <td><span class="badge badge-slate">Cluster Finance</span></td>
+              <td class="small">Mumbai West <span class="tiny muted">(cluster)</span></td>
+              <td class="small muted">Oversight</td>
+              <td><span class="badge badge-emerald">On</span></td>
+              <td><span class="badge badge-emerald"><span class="bdot"></span>Active</span></td>
+              <td class="td-right"><button class="btn btn-ghost btn-sm" data-icon="edit">Edit</button></td>
+            </tr>
+            <tr>
+              <td class="cust"><div class="avatar">IA</div><div><b>Ira Anand</b><small>ira.anand@prabalmotors.in</small></div></td>
+              <td><span class="badge badge-slate">Internal Audit</span></td>
+              <td class="small">All branches</td>
+              <td class="small muted">Read-only</td>
+              <td><span class="badge badge-emerald">On</span></td>
+              <td><span class="badge badge-emerald"><span class="bdot"></span>Active</span></td>
+              <td class="td-right"><button class="btn btn-ghost btn-sm" data-icon="edit">Edit</button></td>
+            </tr>
+            <tr style="opacity:.65">
+              <td class="cust"><div class="avatar">TK</div><div><b>Tarun Kale</b><small>tarun.kale@prabalmotors.in</small></div></td>
+              <td><span class="badge badge-indigo">Cashier</span></td>
+              <td class="small">Thane</td>
+              <td class="small muted">Maker</td>
+              <td><span class="badge badge-red">Off</span></td>
+              <td><span class="badge badge-amber"><span class="bdot"></span>Suspended</span></td>
+              <td class="td-right"><button class="btn btn-ghost btn-sm">Reactivate</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="alert alert-info mt-3">
+      <span data-icon="shield"></span>
+      <div><b>Guardrails.</b> The maker of a transaction can never be its checker <span class="muted">(BR-03)</span>, no user can physically delete records <span class="muted">(BR-05)</span>, and every role/scope change is written to the immutable audit log.</div>
+    </div>
+  </main>
+
+  <!-- Add user modal -->
+  <div class="modal-overlay" id="newUser">
+    <div class="modal">
+      <div class="modal-head"><h3>Add user</h3></div>
+      <div class="modal-body">
+        <div class="field mb-2"><label>Full name <span class="req">*</span></label><input class="input" placeholder="e.g. Kavya Menon"></div>
+        <div class="field mb-2"><label>Work email <span class="req">*</span></label><input class="input" placeholder="name@prabalmotors.in"></div>
+        <div class="form-grid" style="gap:14px">
+          <div class="field"><label>Role <span class="req">*</span></label><select class="select"><option>Cashier</option><option>Sales Advisor</option><option>Service Advisor</option><option>Works Manager</option><option>Branch Accountant</option><option>Cluster Finance</option><option>Corporate Finance</option><option>Internal Audit</option><option>CFO / Admin</option></select></div>
+          <div class="field"><label>Branch / scope <span class="req">*</span></label><select class="select"><option>Andheri (Service)</option><option>Bandra (Sales)</option><option>Thane</option><option>Mumbai West (cluster)</option></select></div>
+        </div>
+        <div class="alert alert-warn mt-2"><span data-icon="shield"></span><div>MFA enrolment is required on first login. An invitation email will be sent.</div></div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-ghost" data-close-modal>Cancel</button>
+        <button class="btn btn-primary" data-close-modal>Create & invite</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/app.js"></script>
+</body>
+</html>

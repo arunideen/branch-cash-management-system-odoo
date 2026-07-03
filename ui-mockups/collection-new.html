@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>New Collection Request — BCMS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-page="collection-new" data-role="Service Advisor" data-user="Rahul Iyer">
+  <main class="content">
+    <div class="breadcrumb"><span>Collections</span><span class="sep">/</span><b>New Request</b></div>
+    <div class="page-head">
+      <div class="titles">
+        <h1>New collection request</h1>
+        <p>Raise a request against an invoice or job card. Mandatory documents are required before submission <span class="muted">(BR-01)</span>.</p>
+      </div>
+    </div>
+
+    <div class="grid cols-2">
+      <div class="card">
+        <div class="card-head"><div><h3>Request details</h3><p>Fields validated on submit</p></div>
+          <div class="actions"><span class="badge badge-slate"><span class="bdot"></span>Draft</span></div>
+        </div>
+        <div class="card-pad">
+          <div class="mb-3">
+            <label class="field" style="margin-bottom:8px"><span style="font-size:12.5px;font-weight:600;color:#334155">Collection vertical <span class="req" style="color:var(--destructive)">*</span></span></label>
+            <div class="seg" data-mode-seg style="display:none"></div>
+            <div class="seg">
+              <button class="">Sales (Invoice)</button>
+              <button class="on">Service (Job Card)</button>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="field">
+              <label>Customer name <span class="req">*</span></label>
+              <input class="input" value="Ramesh Sharma">
+            </div>
+            <div class="field">
+              <label>Mobile number <span class="req">*</span></label>
+              <input class="input" value="98200 41290">
+            </div>
+            <div class="field">
+              <label>Reference type <span class="req">*</span></label>
+              <select class="select"><option>Job Card</option><option>Invoice</option></select>
+            </div>
+            <div class="field">
+              <label>Job Card no. <span class="req">*</span></label>
+              <input class="input" value="JC-00891">
+            </div>
+            <div class="field">
+              <label>Vehicle / Reg. no.</label>
+              <input class="input" value="MH02 CK 4821 · Swift VDi">
+            </div>
+            <div class="field">
+              <label>Amount to collect <span class="req">*</span></label>
+              <div class="input-wrap"><span class="prefix">₹</span><input class="input with-prefix num" value="4,520"></div>
+            </div>
+            <div class="field">
+              <label>Expected payment mode <span class="req">*</span></label>
+              <select class="select"><option>Cash</option><option>Online (UPI/Card/NEFT)</option><option>Mixed</option></select>
+            </div>
+            <div class="field">
+              <label>Service advisor</label>
+              <input class="input" value="Rahul Iyer" disabled>
+            </div>
+            <div class="field full">
+              <label>Notes for cashier</label>
+              <textarea class="textarea" placeholder="Any context for verification…">Customer will pay at counter after test drive. Warranty job — check approval note.</textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid;gap:18px">
+        <div class="card">
+          <div class="card-head"><div><h3>Mandatory documents</h3><p>PDF / JPG / PNG · ≤ 10 MB each</p></div></div>
+          <div class="card-pad">
+            <div class="dropzone">
+              <div data-icon="upload" style="font-size:0"></div>
+              <div style="margin-top:8px"><b>Click to upload</b> or drag & drop</div>
+              <div class="tiny" style="margin-top:2px">Uploading replaces current; previous versions kept <span class="muted">(BR-13)</span></div>
+            </div>
+            <div class="file-chip">
+              <span class="fico" data-icon="file"></span>
+              <div style="flex:1"><b>job-card-JC-00891.pdf</b><br><small>184 KB · verified type</small></div>
+              <span class="ok" data-icon="check"></span>
+            </div>
+            <div class="file-chip">
+              <span class="fico" data-icon="file"></span>
+              <div style="flex:1"><b>estimate-approval.jpg</b><br><small>512 KB · v2 (replaced v1)</small></div>
+              <span class="ok" data-icon="check"></span>
+            </div>
+            <div class="alert alert-info mt-2">
+              <span data-icon="info"></span>
+              <div>At least one document is required. A unique <b>Request ID</b> is generated on submit and the request appears in the cashier queue.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-pad">
+          <div class="flex justify-between items-center mb-2">
+            <div><div class="small muted">Amount to collect</div><div style="font-size:24px;font-weight:700" class="num">₹4,520</div></div>
+            <div class="right"><div class="small muted">Reference</div><div class="ref-code" style="font-size:14px">JC-00891</div></div>
+          </div>
+          <div class="flex gap-1">
+            <button class="btn btn-ghost btn-block">Save draft</button>
+            <a class="btn btn-primary btn-block" href="my-requests.html" data-icon="filePlus">Submit request</a>
+          </div>
+          <p class="tiny muted center mt-1">You can edit this request until a cashier accepts it.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script src="assets/app.js"></script>
+</body>
+</html>

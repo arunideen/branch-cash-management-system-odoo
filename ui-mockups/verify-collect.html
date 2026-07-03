@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Verify & Collect — BCMS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-page="verify-collect" data-role="Cashier" data-user="Priya Nair">
+  <main class="content">
+    <div class="breadcrumb"><span>Payment</span><span class="sep">/</span><a href="cashier-queue.html">Cashier Queue</a><span class="sep">/</span><b>CR/AND/2026/000123</b></div>
+    <div class="page-head">
+      <div class="titles">
+        <h1>Verify & collect payment</h1>
+        <p>Request <span class="ref-code">CR/AND/2026/000123</span> · Ramesh Sharma · Job Card <span class="ref-code">JC-00891</span></p>
+      </div>
+      <div class="actions">
+        <button class="btn btn-danger" data-open-modal="rejectModal" data-icon="x">Reject</button>
+      </div>
+    </div>
+
+    <!-- Progress stepper -->
+    <div class="card card-pad mb-3">
+      <div class="stepper">
+        <div class="step done"><div class="dot" data-icon="check" style="font-size:0"></div><div class="lbl">Request raised</div></div>
+        <div class="bar done"></div>
+        <div class="step active"><div class="dot">2</div><div class="lbl">Verify & collect</div></div>
+        <div class="bar"></div>
+        <div class="step todo"><div class="dot">3</div><div class="lbl">Receipt</div></div>
+      </div>
+    </div>
+
+    <div class="grid cols-verify">
+      <!-- LEFT: request + documents -->
+      <div style="display:grid;gap:18px">
+        <div class="card">
+          <div class="card-head"><div><h3>Request details</h3><p>Verify against the documents</p></div>
+            <div class="actions"><span class="badge badge-sky"><span class="bdot"></span>Service</span></div>
+          </div>
+          <div class="card-pad">
+            <div class="grid grid-2" style="gap:14px 24px">
+              <div><div class="tiny muted">Customer</div><b>Ramesh Sharma</b></div>
+              <div><div class="tiny muted">Mobile</div><b>98200 41290</b></div>
+              <div><div class="tiny muted">Reference</div><b class="ref-code">JC-00891</b></div>
+              <div><div class="tiny muted">Vehicle</div><b>MH02 CK 4821</b></div>
+              <div><div class="tiny muted">Raised by</div><b>Rahul Iyer</b></div>
+              <div><div class="tiny muted">Expected mode</div><b>Cash</b></div>
+            </div>
+            <div class="divider"></div>
+            <div class="flex justify-between items-center">
+              <span class="small muted">Amount to collect</span>
+              <span style="font-size:26px;font-weight:700" class="num">₹4,520</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><div><h3>Documents</h3><p>2 attached · click to preview</p></div></div>
+          <div class="card-pad" style="display:grid;gap:14px">
+            <div class="doc-preview">
+              <div class="doc-head"><span data-icon="file" style="font-size:0"></span> job-card-JC-00891.pdf <span class="badge badge-slate" style="margin-left:auto">v1</span></div>
+              <div class="doc-body">Document preview</div>
+            </div>
+            <div class="doc-preview">
+              <div class="doc-head"><span data-icon="file" style="font-size:0"></span> estimate-approval.jpg <span class="badge badge-slate" style="margin-left:auto">v2</span></div>
+              <div class="doc-body">Document preview</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: payment capture -->
+      <div style="display:grid;gap:18px">
+        <div class="card">
+          <div class="card-head"><div><h3>Capture payment</h3><p>Total captured must equal the amount due <span class="muted">(FR-CV-06)</span></p></div></div>
+          <div class="card-pad">
+            <div class="seg" data-mode-seg style="margin-bottom:18px">
+              <button class="on" data-mode="cash">Cash</button>
+              <button data-mode="online">Online</button>
+              <button data-mode="mixed">Mixed</button>
+            </div>
+
+            <!-- Cash denomination grid -->
+            <div data-mode-panel="cash" data-denom data-required="4520" data-bar="#matchBar">
+              <table class="denom-table">
+                <thead><tr><th>Denomination</th><th class="r">Count</th><th class="r">Subtotal</th></tr></thead>
+                <tbody>
+                  <tr><td class="denom-face">₹2,000</td><td class="r"><input class="denom-input" data-face="2000" value="2"></td><td class="r" data-subtotal>₹4,000</td></tr>
+                  <tr><td class="denom-face">₹500</td><td class="r"><input class="denom-input" data-face="500" value="1"></td><td class="r" data-subtotal>₹500</td></tr>
+                  <tr><td class="denom-face">₹100</td><td class="r"><input class="denom-input" data-face="100" value="0"></td><td class="r" data-subtotal>₹0</td></tr>
+                  <tr><td class="denom-face">₹50</td><td class="r"><input class="denom-input" data-face="50" value="0"></td><td class="r" data-subtotal>₹0</td></tr>
+                  <tr><td class="denom-face">₹20</td><td class="r"><input class="denom-input" data-face="20" value="1"></td><td class="r" data-subtotal>₹20</td></tr>
+                  <tr><td class="denom-face">₹10</td><td class="r"><input class="denom-input" data-face="10" value="0"></td><td class="r" data-subtotal>₹0</td></tr>
+                </tbody>
+                <tfoot><tr><td colspan="2" style="text-align:right;font-weight:600">Cash counted</td><td class="r" style="font-weight:700" data-denom-total>₹4,520</td></tr></tfoot>
+              </table>
+            </div>
+
+            <!-- Online panel -->
+            <div data-mode-panel="online" style="display:none;padding-top:4px">
+              <div class="form-grid" style="grid-template-columns:1fr">
+                <div class="field"><label>Payment channel</label>
+                  <select class="select"><option>UPI</option><option>Debit / Credit Card</option><option>NEFT / IMPS</option></select></div>
+                <div class="field"><label>Transaction / UTR reference <span class="req">*</span></label>
+                  <input class="input mono" placeholder="e.g. 431802119045"></div>
+                <div class="field"><label>Amount received <span class="req">*</span></label>
+                  <div class="input-wrap"><span class="prefix">₹</span><input class="input with-prefix num" value="4,520"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Running total / match bar -->
+        <div class="card card-pad">
+          <div class="total-bar ok" id="matchBar">
+            <div><div class="lbl">Captured / Required</div><div style="font-weight:700;font-size:15px" data-bar-amt>₹4,520 / ₹4,520</div></div>
+            <div class="right" style="margin-left:auto"><span class="badge badge-emerald"><span class="bdot"></span><span data-bar-status>Matched ✓</span></span></div>
+          </div>
+          <div class="progress mt-1"><span style="width:100%"></span></div>
+
+          <div class="flex gap-1 mt-3">
+            <button class="btn btn-danger btn-block" data-open-modal="rejectModal">Reject with remarks</button>
+            <a class="btn btn-success btn-block" data-match-required href="receipt.html" data-icon="receipt">Accept & issue receipt</a>
+          </div>
+          <p class="tiny muted center mt-1">Receipt is generated atomically and cannot be edited once issued <span>(BR-08)</span>.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Reject modal -->
+  <div class="modal-overlay" id="rejectModal">
+    <div class="modal">
+      <div class="modal-head"><h3>Reject request</h3></div>
+      <div class="modal-body">
+        <div class="alert alert-warn mb-2"><span data-icon="alert"></span><div>The request returns to the advisor for correction. A remark is mandatory <span class="muted">(BR-09)</span>.</div></div>
+        <div class="field mb-2">
+          <label>Reason <span class="req">*</span></label>
+          <select class="select"><option>Invoice / job card copy missing or illegible</option><option>Amount mismatch with reference</option><option>Customer details incorrect</option><option>Other (specify)</option></select>
+        </div>
+        <div class="field">
+          <label>Remarks to advisor <span class="req">*</span></label>
+          <textarea class="textarea" placeholder="Explain what needs to be corrected…"></textarea>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-ghost" data-close-modal>Cancel</button>
+        <a class="btn btn-danger-solid" href="cashier-queue.html">Confirm rejection</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Accounting — BCMS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-page="accounting" data-role="Branch Accountant" data-user="Sanjay Rao">
+  <main class="content">
+    <div class="breadcrumb"><span>Closing &amp; Approvals</span><span class="sep">/</span><b>Accounting</b></div>
+    <div class="page-head">
+      <div class="titles">
+        <h1>Accounting &amp; Tally reconciliation</h1>
+        <p>Post finalised closings to Tally, then reconcile. Status transitions are logged <span class="muted">(BR-11)</span>.</p>
+      </div>
+      <div class="actions"><span class="pill" data-icon="book">Tally: PMPL_AND_2026</span></div>
+    </div>
+
+    <div class="grid grid-4 mb-3">
+      <div class="card kpi"><div class="kpi-top"><span class="label" style="margin-top:0">Pending posting</span><span class="kpi-icon tint-amber" data-icon="clock"></span></div><div class="value">2</div><div class="delta flat">₹3,04,650</div></div>
+      <div class="card kpi"><div class="kpi-top"><span class="label" style="margin-top:0">Posted</span><span class="kpi-icon tint-indigo" data-icon="book"></span></div><div class="value">5</div><div class="delta flat">awaiting match</div></div>
+      <div class="card kpi"><div class="kpi-top"><span class="label" style="margin-top:0">Reconciled (MTD)</span><span class="kpi-icon tint-emerald" data-icon="check"></span></div><div class="value">48</div><div class="delta up">96% on time</div></div>
+      <div class="card kpi"><div class="kpi-top"><span class="label" style="margin-top:0">Discrepancy</span><span class="kpi-icon tint-red" data-icon="alert"></span></div><div class="value">1</div><div class="delta down">needs correction</div></div>
+    </div>
+
+    <div class="tabs" data-tabs>
+      <button class="on" data-tab="pending">Pending &amp; Posted <span class="badge badge-amber" style="margin-left:6px">7</span></button>
+      <button data-tab="reconciled">Reconciled</button>
+    </div>
+
+    <!-- PENDING / POSTED -->
+    <div class="tab-panel on" data-panel="pending">
+      <div class="grid cols-2">
+        <div class="card">
+          <div class="card-head"><div><h3>Awaiting accounting</h3><p>Finalised closings, deposits &amp; expenses</p></div></div>
+          <div class="table-wrap">
+            <table class="tbl">
+              <thead><tr><th>Source</th><th>Type</th><th class="th-right">Amount</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr style="background:var(--primary-50)">
+                  <td><span class="ref-code">CLS/AND/0129</span></td><td>Closing · 01-07</td>
+                  <td class="money">₹2,10,400</td><td><span class="badge badge-amber"><span class="bdot"></span>Pending</span></td>
+                </tr>
+                <tr>
+                  <td><span class="ref-code">DEP/AND/0086</span></td><td>Deposit</td>
+                  <td class="money">₹1,10,000</td><td><span class="badge badge-amber"><span class="bdot"></span>Pending</span></td>
+                </tr>
+                <tr>
+                  <td><span class="ref-code">CLS/AND/0128</span></td><td>Closing · 30-06</td>
+                  <td class="money">₹1,88,900</td><td><span class="badge badge-sky"><span class="bdot"></span>Posted</span></td>
+                </tr>
+                <tr>
+                  <td><span class="ref-code">EXP/AND/0309</span></td><td>Expense</td>
+                  <td class="money">₹9,070</td><td><span class="badge badge-sky"><span class="bdot"></span>Posted</span></td>
+                </tr>
+                <tr>
+                  <td><span class="ref-code">CLS/BND/0071</span></td><td>Closing · 30-06</td>
+                  <td class="money">₹74,300</td><td><span class="badge badge-red"><span class="bdot"></span>Discrepancy</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Detail: post to Tally -->
+        <div class="card">
+          <div class="card-head">
+            <div><h3>CLS/AND/0129</h3><p>Closing · 01-07-2026 · Andheri (Service)</p></div>
+            <div class="actions"><span class="badge badge-amber"><span class="bdot"></span>Pending</span></div>
+          </div>
+          <div class="card-pad">
+            <!-- state machine -->
+            <div class="stepper mb-3">
+              <div class="step active"><div class="dot">1</div><div class="lbl">Pending</div></div>
+              <div class="bar"></div>
+              <div class="step todo"><div class="dot">2</div><div class="lbl">Posted</div></div>
+              <div class="bar"></div>
+              <div class="step todo"><div class="dot">3</div><div class="lbl">Reconciled</div></div>
+            </div>
+
+            <div class="sumrow"><span class="k">Cash collections</span><span class="v num">₹1,64,520</span></div>
+            <div class="sumrow"><span class="k">Online collections</span><span class="v num">₹82,000</span></div>
+            <div class="sumrow"><span class="k">Expenses</span><span class="v num">₹12,270</span></div>
+            <div class="sumrow"><span class="k">Deposits</span><span class="v num">₹1,50,000</span></div>
+            <div class="sumrow total"><span class="k">Net to account</span><span class="v num">₹2,10,400</span></div>
+
+            <div class="divider"></div>
+            <div class="form-grid">
+              <div class="field">
+                <label>Tally voucher no. <span class="req">*</span></label>
+                <input class="input mono" placeholder="e.g. RCPT-2607">
+              </div>
+              <div class="field">
+                <label>Voucher date <span class="req">*</span></label>
+                <input class="input" value="02-07-2026">
+              </div>
+              <div class="field">
+                <label>Voucher type <span class="req">*</span></label>
+                <select class="select"><option>Receipt</option><option>Contra (deposit)</option><option>Payment (expense)</option><option>Journal</option></select>
+              </div>
+              <div class="field">
+                <label>Ledger <span class="req">*</span></label>
+                <select class="select"><option>Cash-in-Hand · Andheri</option><option>HDFC Bank ••4021</option><option>Sundry Debtors</option></select>
+              </div>
+              <div class="field full">
+                <label>Posting narration</label>
+                <textarea class="textarea" placeholder="Reference for the Tally entry…">Being cash collections & deposits for 01-07-2026, Andheri (Service).</textarea>
+              </div>
+            </div>
+
+            <div class="flex gap-1 mt-3">
+              <button class="btn btn-ghost btn-block" data-open-modal="discrepancy">Flag discrepancy</button>
+              <button class="btn btn-primary btn-block" data-open-modal="postTally" data-icon="book">Mark posted</button>
+            </div>
+            <p class="tiny muted center mt-1">Once posted, match against the Tally daybook to reconcile.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RECONCILED -->
+    <div class="tab-panel" data-panel="reconciled">
+      <div class="card">
+        <div class="card-head"><div><h3>Reconciled entries</h3><p>Matched with Tally daybook</p></div>
+          <div class="actions"><button class="btn btn-ghost btn-sm" data-icon="download">Export</button></div>
+        </div>
+        <div class="table-wrap">
+          <table class="tbl">
+            <thead><tr><th>Source</th><th>Tally voucher</th><th>Ledger</th><th class="th-right">Amount</th><th>Reconciled</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td><span class="ref-code">CLS/AND/0127</span></td><td class="mono">RCPT-2906</td><td class="small">Cash-in-Hand · Andheri</td><td class="money">₹1,96,540</td><td class="small muted">30-06-2026</td><td><span class="badge badge-emerald"><span class="bdot"></span>Reconciled</span></td></tr>
+              <tr><td><span class="ref-code">DEP/AND/0084</span></td><td class="mono">CONTRA-2903</td><td class="small">HDFC Bank ••4021</td><td class="money">₹1,50,000</td><td class="small muted">30-06-2026</td><td><span class="badge badge-emerald"><span class="bdot"></span>Reconciled</span></td></tr>
+              <tr><td><span class="ref-code">EXP/AND/0305</span></td><td class="mono">PYMT-2811</td><td class="small">Housekeeping</td><td class="money">₹3,200</td><td class="small muted">29-06-2026</td><td><span class="badge badge-emerald"><span class="bdot"></span>Reconciled</span></td></tr>
+              <tr><td><span class="ref-code">CLS/AND/0126</span></td><td class="mono">RCPT-2801</td><td class="small">Cash-in-Hand · Andheri</td><td class="money">₹1,42,900</td><td class="small muted">29-06-2026</td><td><span class="badge badge-emerald"><span class="bdot"></span>Reconciled</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Post to Tally modal -->
+  <div class="modal-overlay" id="postTally">
+    <div class="modal">
+      <div class="modal-head"><h3>Mark CLS/AND/0129 as posted</h3></div>
+      <div class="modal-body">
+        <div class="alert alert-info mb-2"><span data-icon="book"></span><div>Records the Tally voucher against this closing and moves it to <b>Posted</b>. Reconcile once it appears in the Tally daybook.</div></div>
+        <div class="sumrow"><span class="k">Voucher no.</span><span class="v mono">RCPT-2607</span></div>
+        <div class="sumrow"><span class="k">Ledger</span><span class="v">Cash-in-Hand · Andheri</span></div>
+        <div class="sumrow"><span class="k">Amount</span><span class="v">₹2,10,400</span></div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-ghost" data-close-modal>Cancel</button>
+        <button class="btn btn-primary" data-close-modal>Confirm posting</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Discrepancy modal -->
+  <div class="modal-overlay" id="discrepancy">
+    <div class="modal">
+      <div class="modal-head"><h3>Flag discrepancy</h3></div>
+      <div class="modal-body">
+        <div class="alert alert-warn mb-2"><span data-icon="alert"></span><div>Marks a mismatch between the system figure and Tally. It appears on the Accounting-Pending exception report until corrected.</div></div>
+        <div class="field mb-2"><label>Discrepancy type <span class="req">*</span></label><select class="select"><option>Amount mismatch vs Tally</option><option>Ledger misclassification</option><option>Missing counter-entry</option><option>Other</option></select></div>
+        <div class="field"><label>Details <span class="req">*</span></label><textarea class="textarea" placeholder="Describe the mismatch…"></textarea></div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-ghost" data-close-modal>Cancel</button>
+        <button class="btn btn-danger-solid" data-close-modal>Flag discrepancy</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/app.js"></script>
+</body>
+</html>

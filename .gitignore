@@ -1,0 +1,18 @@
+# Local Claude Code tooling / settings
+.claude/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Temp / build (none yet — placeholders for when the app is scaffolded)
+node_modules/
+.next/
+dist/
+*.log
+.env
+.env.*
+!.env.example

@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cash Closing — BCMS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-page="cash-closing" data-role="Cashier" data-user="Priya Nair">
+  <main class="content">
+    <div class="breadcrumb"><span>Closing &amp; Approvals</span><span class="sep">/</span><b>Cash Closing</b></div>
+    <div class="page-head">
+      <div class="titles">
+        <h1>End-of-day cash closing</h1>
+        <p>02-07-2026 · Andheri (Service) · Cashier drawer — Priya Nair</p>
+      </div>
+      <div class="actions"><span class="badge badge-slate"><span class="bdot"></span>Draft</span></div>
+    </div>
+
+    <div class="grid cols-verify">
+      <!-- LEFT: expected computation + physical count -->
+      <div style="display:grid;gap:18px">
+        <div class="card">
+          <div class="card-head"><div><h3>Expected cash</h3><p>System-computed from today's activity <span class="muted">(BR-10)</span></p></div></div>
+          <div class="card-pad">
+            <div class="sumrow"><span class="k">Opening cash <span class="tiny">(carry-forward)</span></span><span class="v">₹1,20,000</span></div>
+            <div class="sumrow"><span class="k">＋ Cash collections</span><span class="v" style="color:var(--success)">₹1,64,520</span></div>
+            <div class="sumrow"><span class="k">− Cash expenses</span><span class="v" style="color:var(--destructive)">₹12,270</span></div>
+            <div class="sumrow"><span class="k">− Bank deposits</span><span class="v" style="color:var(--destructive)">₹1,50,000</span></div>
+            <div class="sumrow total"><span class="k">Expected cash in drawer</span><span class="v num">₹1,22,250</span></div>
+            <p class="tiny muted mt-1">Online collections (₹82,000) are excluded from the physical drawer. Opening = previous day's verified closing <span>(AS-14)</span>.</p>
+          </div>
+        </div>
+
+        <div class="card" data-closing-denom data-denom>
+          <div class="card-head"><div><h3>Physical cash count</h3><p>Count the drawer and enter quantities</p></div>
+            <div class="actions"><b class="num" data-phys-total style="font-size:16px">₹1,22,050</b></div>
+          </div>
+          <div class="card-pad">
+            <table class="denom-table">
+              <thead><tr><th>Denomination</th><th class="r">Count</th><th class="r">Subtotal</th></tr></thead>
+              <tbody>
+                <tr><td class="denom-face">₹2,000</td><td class="r"><input class="denom-input" data-face="2000" value="40"></td><td class="r" data-subtotal>₹80,000</td></tr>
+                <tr><td class="denom-face">₹500</td><td class="r"><input class="denom-input" data-face="500" value="70"></td><td class="r" data-subtotal>₹35,000</td></tr>
+                <tr><td class="denom-face">₹200</td><td class="r"><input class="denom-input" data-face="200" value="18"></td><td class="r" data-subtotal>₹3,600</td></tr>
+                <tr><td class="denom-face">₹100</td><td class="r"><input class="denom-input" data-face="100" value="30"></td><td class="r" data-subtotal>₹3,000</td></tr>
+                <tr><td class="denom-face">₹50</td><td class="r"><input class="denom-input" data-face="50" value="8"></td><td class="r" data-subtotal>₹400</td></tr>
+                <tr><td class="denom-face">₹20</td><td class="r"><input class="denom-input" data-face="20" value="2"></td><td class="r" data-subtotal>₹40</td></tr>
+                <tr><td class="denom-face">₹10</td><td class="r"><input class="denom-input" data-face="10" value="1"></td><td class="r" data-subtotal>₹10</td></tr>
+              </tbody>
+              <tfoot><tr><td colspan="2" style="text-align:right;font-weight:600">Physical total</td><td class="r" style="font-weight:700" data-phys-total>₹1,22,050</td></tr></tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: variance + submit -->
+      <div style="display:grid;gap:18px">
+        <div class="card" data-variance data-expected="122250">
+          <div class="card-head"><div><h3>Reconciliation</h3><p>Physical vs expected</p></div>
+            <div class="actions"><span class="badge badge-red" data-variance-badge><span class="bdot"></span>Variance</span></div>
+          </div>
+          <div class="card-pad">
+            <div class="sumrow"><span class="k">Expected</span><span class="v num">₹1,22,250</span></div>
+            <div class="sumrow"><span class="k">Physical (counted)</span><span class="v num" data-phys-total>₹1,22,050</span></div>
+            <div class="sumrow total"><span class="k">Variance</span><span class="v num" data-variance-amt style="color:var(--destructive)">−₹200</span></div>
+
+            <div class="field mt-2" data-variance-reason style="display:flex">
+              <label>Variance reason <span class="req">*</span> <span class="tiny muted">— required when variance ≠ 0 (BR-04)</span></label>
+              <select class="select mb-1"><option>Short — denomination miscount</option><option>Short — pending petty expense not recorded</option><option>Excess — rounding on receipts</option><option>Other (explain)</option></select>
+              <textarea class="textarea" placeholder="Explain the difference…">₹200 short — a petty conveyance expense paid in cash was not entered as a voucher; will be recorded tomorrow.</textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-pad">
+          <div class="alert alert-info mb-2"><span data-icon="info"></span>
+            <div>On submit, the closing is locked from editing and routed to the <b>Works Manager</b> for approval, then the <b>Branch Accountant</b> for physical verification <span class="muted">(BR-02)</span>.</div>
+          </div>
+          <a class="btn btn-primary btn-block" href="approvals.html" data-icon="lock">Submit closing for approval</a>
+          <p class="tiny muted center mt-1">You cannot approve your own closing — maker ≠ checker <span>(BR-03)</span>.</p>
+        </div>
+
+        <div class="card card-pad">
+          <b class="small">Approval chain</b>
+          <div class="timeline mt-2">
+            <div class="tl-item now"><div class="tl-dot"></div><div class="tl-title">Cashier — submits closing</div><div class="tl-meta">Priya Nair · now</div></div>
+            <div class="tl-item"><div class="tl-dot"></div><div class="tl-title">Works Manager — L1 approval</div><div class="tl-meta">Pending · A. Deshpande</div></div>
+            <div class="tl-item"><div class="tl-dot"></div><div class="tl-title">Branch Accountant — verify physical cash</div><div class="tl-meta">Pending · S. Rao</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script src="assets/app.js"></script>
+</body>
+</html>

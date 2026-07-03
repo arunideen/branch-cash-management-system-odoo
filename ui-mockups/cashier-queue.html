@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cashier Queue — BCMS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-page="cashier-queue" data-role="Cashier" data-user="Priya Nair">
+  <main class="content">
+    <div class="breadcrumb"><span>Payment</span><span class="sep">/</span><b>Cashier Queue</b></div>
+    <div class="page-head">
+      <div class="titles">
+        <h1>Cashier queue</h1>
+        <p>Requests awaiting verification · updates live as advisors submit.</p>
+      </div>
+      <div class="actions">
+        <span class="pill" data-icon="banknote">Cash in hand: ₹1,84,250</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="chip-counts">
+          <span class="chip-count"><span class="bdot" style="background:var(--warning-500)"></span>Pending 6</span>
+          <span class="chip-count"><span class="bdot" style="background:var(--destructive)"></span>Rejected 1</span>
+          <span class="chip-count"><span class="bdot" style="background:var(--success)"></span>Receipted today 24</span>
+        </div>
+        <div class="actions">
+          <div class="search-inline">
+            <span data-icon="search" style="font-size:0"></span>
+            <input placeholder="Search id / customer / reference">
+          </div>
+          <button class="btn btn-ghost btn-sm" data-icon="filter">Filters</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="tbl">
+          <thead>
+            <tr><th>Request no.</th><th>Customer</th><th>Reference</th><th class="th-right">Amount</th><th>Expected mode</th><th>Vertical</th><th>Age</th><th class="th-right">Action</th></tr>
+          </thead>
+          <tbody>
+            <tr class="row-new">
+              <td><span class="ref-code">CR/AND/2026/000123</span></td>
+              <td class="cust"><div class="avatar">RS</div><div><b>Ramesh Sharma</b><small>Adv: R. Iyer</small></div></td>
+              <td><span class="ref-code">JC-00891</span></td>
+              <td class="money">₹4,520</td>
+              <td><span class="badge badge-slate">Cash</span></td>
+              <td><span class="badge badge-sky">Service</span></td>
+              <td class="small muted">just now</td>
+              <td class="td-right"><a class="btn btn-primary btn-sm" href="verify-collect.html">Verify</a></td>
+            </tr>
+            <tr>
+              <td><span class="ref-code">CR/AND/2026/000122</span></td>
+              <td class="cust"><div class="avatar">AV</div><div><b>Anil Verma</b><small>Adv: S. Gupta</small></div></td>
+              <td><span class="ref-code">INV-2026-0456</span></td>
+              <td class="money">₹62,000</td>
+              <td><span class="badge badge-indigo">Mixed</span></td>
+              <td><span class="badge badge-indigo">Sales</span></td>
+              <td class="small muted">4 min</td>
+              <td class="td-right"><a class="btn btn-ghost btn-sm" href="verify-collect.html">Verify</a></td>
+            </tr>
+            <tr>
+              <td><span class="ref-code">CR/AND/2026/000120</span></td>
+              <td class="cust"><div class="avatar">NJ</div><div><b>Nita Joshi</b><small>Adv: R. Iyer</small></div></td>
+              <td><span class="ref-code">JC-00887</span></td>
+              <td class="money">₹7,340</td>
+              <td><span class="badge badge-sky">UPI</span></td>
+              <td><span class="badge badge-sky">Service</span></td>
+              <td class="small muted">18 min</td>
+              <td class="td-right"><a class="btn btn-ghost btn-sm" href="verify-collect.html">Verify</a></td>
+            </tr>
+            <tr>
+              <td><span class="ref-code">CR/AND/2026/000117</span></td>
+              <td class="cust"><div class="avatar">PT</div><div><b>Prakash Tandon</b><small>Adv: S. Gupta</small></div></td>
+              <td><span class="ref-code">INV-2026-0449</span></td>
+              <td class="money">₹1,28,000</td>
+              <td><span class="badge badge-slate">Cash</span></td>
+              <td><span class="badge badge-indigo">Sales</span></td>
+              <td class="small muted">32 min</td>
+              <td class="td-right"><a class="btn btn-ghost btn-sm" href="verify-collect.html">Verify</a></td>
+            </tr>
+            <tr>
+              <td><span class="ref-code">CR/AND/2026/000116</span></td>
+              <td class="cust"><div class="avatar">LG</div><div><b>Lata Gokhale</b><small>Adv: R. Iyer</small></div></td>
+              <td><span class="ref-code">JC-00882</span></td>
+              <td class="money">₹3,900</td>
+              <td><span class="badge badge-slate">Cash</span></td>
+              <td><span class="badge badge-sky">Service</span></td>
+              <td class="small muted">51 min</td>
+              <td class="td-right"><a class="btn btn-ghost btn-sm" href="verify-collect.html">Verify</a></td>
+            </tr>
+            <tr>
+              <td><span class="ref-code">CR/AND/2026/000115</span></td>
+              <td class="cust"><div class="avatar">HM</div><div><b>Hemant Mehta</b><small>Adv: S. Gupta</small></div></td>
+              <td><span class="ref-code">INV-2026-0447</span></td>
+              <td class="money">₹41,250</td>
+              <td><span class="badge badge-sky">Card</span></td>
+              <td><span class="badge badge-indigo">Sales</span></td>
+              <td class="small muted">1h 12m</td>
+              <td class="td-right"><a class="btn btn-ghost btn-sm" href="verify-collect.html">Verify</a></td>
+            </tr>
+            <tr style="opacity:.72">
+              <td><span class="ref-code">CR/AND/2026/000119</span></td>
+              <td class="cust"><div class="avatar">SP</div><div><b>Suresh Patil</b><small>Adv: R. Iyer</small></div></td>
+              <td><span class="ref-code">INV-2026-0451</span></td>
+              <td class="money">₹9,300</td>
+              <td><span class="badge badge-slate">Cash</span></td>
+              <td><span class="badge badge-indigo">Sales</span></td>
+              <td class="small muted">returned</td>
+              <td class="td-right"><span class="badge badge-red"><span class="bdot"></span>Rejected</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+  <script src="assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cash Expense — BCMS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-page="expenses" data-role="Cashier" data-user="Priya Nair">
+  <main class="content">
+    <div class="breadcrumb"><span>Payment</span><span class="sep">/</span><b>Cash Expense</b></div>
+    <div class="page-head">
+      <div class="titles">
+        <h1>Record cash expense</h1>
+        <p>Petty cash paid out of the drawer. Approved expenses auto-reduce cash-in-hand and feed the day's closing <span class="muted">(BR-06)</span>.</p>
+      </div>
+    </div>
+
+    <div class="grid grid-4 mb-3">
+      <div class="card kpi"><div class="kpi-top"><span class="label" style="margin-top:0">Expenses today</span><span class="kpi-icon tint-amber" data-icon="coins"></span></div><div class="value">₹12,270</div><div class="delta flat">2 approved</div></div>
+      <div class="card kpi"><div class="kpi-top"><span class="label" style="margin-top:0">Pending approval</span><span class="kpi-icon tint-indigo" data-icon="clock"></span></div><div class="value">₹64,500</div><div class="delta flat">1 voucher</div></div>
+      <div class="card kpi"><div class="kpi-top"><span class="label" style="margin-top:0">Cash in hand</span><span class="kpi-icon tint-emerald" data-icon="banknote"></span></div><div class="value">₹1,84,250</div><div class="delta down">after approvals</div></div>
+      <div class="card kpi"><div class="kpi-top"><span class="label" style="margin-top:0">Rejected</span><span class="kpi-icon tint-red" data-icon="x"></span></div><div class="value">1</div><div class="delta flat">this week</div></div>
+    </div>
+
+    <div class="grid cols-verify">
+      <!-- LEFT: new voucher -->
+      <div class="card">
+        <div class="card-head"><div><h3>New expense voucher</h3><p>Voucher no. is auto-generated on submit</p></div>
+          <div class="actions"><span class="badge badge-slate"><span class="bdot"></span>Draft</span></div>
+        </div>
+        <div class="card-pad">
+          <div class="form-grid">
+            <div class="field">
+              <label>Voucher no.</label>
+              <input class="input mono" value="EXP/AND/0314" disabled>
+            </div>
+            <div class="field">
+              <label>Date <span class="req">*</span></label>
+              <input class="input" value="02-07-2026">
+            </div>
+            <div class="field">
+              <label>Expense head <span class="req">*</span></label>
+              <select class="select" id="headSel">
+                <option data-limit="5000">Housekeeping · limit ₹5,000</option>
+                <option data-limit="10000">Vehicle fuel · limit ₹10,000</option>
+                <option data-limit="25000">Equipment repair · limit ₹25,000</option>
+                <option data-limit="2000">Staff conveyance · limit ₹2,000</option>
+                <option data-limit="1500">Courier &amp; postage · limit ₹1,500</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Amount <span class="req">*</span></label>
+              <div class="input-wrap"><span class="prefix">₹</span><input class="input with-prefix num" id="amt" value="3,200"></div>
+            </div>
+            <div class="field">
+              <label>Paid to (payee) <span class="req">*</span></label>
+              <input class="input" value="Sparkle Facility Services">
+            </div>
+            <div class="field">
+              <label>Approver <span class="req">*</span></label>
+              <select class="select"><option>Ajit Deshpande — Works Manager</option><option>Sanjay Rao — Branch Accountant</option></select>
+            </div>
+            <div class="field full">
+              <label>Narration</label>
+              <textarea class="textarea" placeholder="What was this for?">Monthly housekeeping — showroom & service bay deep clean.</textarea>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+          <b class="small">Supporting bill / attachment <span class="tiny muted">— required above ₹500</span></b>
+          <div class="dropzone mt-1">
+            <div data-icon="upload" style="font-size:0"></div>
+            <div style="margin-top:8px"><b>Upload bill</b> — PDF / JPG / PNG · ≤ 10 MB</div>
+          </div>
+          <div class="file-chip"><span class="fico" data-icon="file"></span><div style="flex:1"><b>sparkle-invoice-jul.pdf</b><br><small>168 KB</small></div><span class="ok" data-icon="check"></span></div>
+
+          <div class="alert alert-success mt-2" id="limitOk"><span data-icon="check"></span><div>Within the Works Manager's approval limit for <b>Housekeeping</b> (₹5,000) — routes directly for L1 approval.</div></div>
+          <div class="alert alert-warn mt-2" id="limitEsc" style="display:none"><span data-icon="alert"></span><div>Above approver threshold — this voucher will <b>escalate</b> to Cluster Finance <span class="muted">(R-02)</span>.</div></div>
+
+          <a class="btn btn-primary btn-block mt-3" href="#" data-icon="coins">Submit for approval</a>
+          <p class="tiny muted center mt-1">You cannot approve your own voucher — maker ≠ checker <span>(BR-03)</span>.</p>
+        </div>
+      </div>
+
+      <!-- RIGHT: today's vouchers + lifecycle -->
+      <div style="display:grid;gap:18px">
+        <div class="card">
+          <div class="card-head"><div><h3>Today's vouchers</h3><p>Andheri (Service)</p></div></div>
+          <div class="table-wrap">
+            <table class="tbl">
+              <thead><tr><th>Voucher</th><th>Head</th><th class="th-right">Amount</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><span class="ref-code">EXP/AND/0311</span></td><td>Housekeeping</td>
+                  <td class="money">₹3,200</td>
+                  <td><span class="badge badge-emerald"><span class="bdot"></span>Approved</span></td>
+                </tr>
+                <tr>
+                  <td><span class="ref-code">EXP/AND/0312</span></td><td>Vehicle fuel</td>
+                  <td class="money">₹9,070</td>
+                  <td><span class="badge badge-emerald"><span class="bdot"></span>Approved</span></td>
+                </tr>
+                <tr>
+                  <td><span class="ref-code">EXP/AND/0313</span></td><td>Equipment repair</td>
+                  <td class="money">₹64,500</td>
+                  <td><span class="badge badge-sky"><span class="bdot"></span>Escalated</span></td>
+                </tr>
+                <tr>
+                  <td><span class="ref-code">EXP/AND/0310</span></td><td>Courier</td>
+                  <td class="money">₹640</td>
+                  <td><span class="badge badge-red"><span class="bdot"></span>Rejected</span></td>
+                </tr>
+              </tbody>
+              <tfoot><tr><td colspan="2" style="text-align:right">Approved today</td><td class="money">₹12,270</td><td></td></tr></tfoot>
+            </table>
+          </div>
+        </div>
+
+        <div class="card card-pad">
+          <b class="small">Expense lifecycle</b>
+          <div class="stepper mt-2">
+            <div class="step done"><div class="dot" data-icon="check" style="font-size:0"></div><div class="lbl">Submitted</div></div>
+            <div class="bar done"></div>
+            <div class="step active"><div class="dot">2</div><div class="lbl">Approval</div></div>
+            <div class="bar"></div>
+            <div class="step todo"><div class="dot">3</div><div class="lbl">Cash reduced</div></div>
+            <div class="bar"></div>
+            <div class="step todo"><div class="dot">4</div><div class="lbl">Feeds closing</div></div>
+          </div>
+          <div class="alert alert-info mt-3"><span data-icon="info"></span>
+            <div>On approval the amount is <b>auto-deducted from cash-in-hand</b> and included as an expense in the end-of-day <a href="cash-closing.html">cash closing</a>.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="assets/app.js"></script>
+  <script>
+    // Toggle the escalation notice when amount exceeds the selected head's limit
+    const headSel = document.getElementById('headSel');
+    const amt = document.getElementById('amt');
+    function checkLimit() {
+      const limit = parseFloat(headSel.selectedOptions[0].dataset.limit || '0');
+      const val = parseFloat((amt.value || '0').replace(/,/g, '')) || 0;
+      const esc = val > limit;
+      document.getElementById('limitEsc').style.display = esc ? 'flex' : 'none';
+      document.getElementById('limitOk').style.display = esc ? 'none' : 'flex';
+    }
+    headSel.addEventListener('change', checkLimit);
+    amt.addEventListener('input', checkLimit);
+    checkLimit();
+  </script>
+</body>
+</html>

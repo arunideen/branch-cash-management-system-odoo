@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Approvals — BCMS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-page="approvals" data-role="Works Manager" data-user="Ajit Deshpande">
+  <main class="content">
+    <div class="breadcrumb"><span>Closing &amp; Approvals</span><span class="sep">/</span><b>Approvals</b></div>
+    <div class="page-head">
+      <div class="titles">
+        <h1>Approvals</h1>
+        <p>Review and approve cash closings & expenses. You cannot approve items you created <span class="muted">(BR-03)</span>.</p>
+      </div>
+    </div>
+
+    <div class="tabs" data-tabs>
+      <button class="on" data-tab="closings">Closings <span class="badge badge-amber" style="margin-left:6px">3</span></button>
+      <button data-tab="expenses">Expenses <span class="badge badge-amber" style="margin-left:6px">2</span></button>
+    </div>
+
+    <!-- CLOSINGS -->
+    <div class="tab-panel on" data-panel="closings">
+      <div class="grid cols-2">
+        <div class="card">
+          <div class="card-head"><div><h3>Pending closings</h3><p>Variance highlighted</p></div></div>
+          <div class="table-wrap">
+            <table class="tbl">
+              <thead><tr><th>Closing</th><th>Cashier</th><th>Date</th><th class="th-right">Expected</th><th class="th-right">Variance</th><th></th></tr></thead>
+              <tbody>
+                <tr style="background:var(--primary-50)">
+                  <td><span class="ref-code">CLS/AND/0130</span></td>
+                  <td>Priya Nair</td>
+                  <td class="small muted">02-07-2026</td>
+                  <td class="money">₹1,22,250</td>
+                  <td class="money" style="color:var(--destructive);font-weight:700">−₹200</td>
+                  <td class="td-right"><span class="badge badge-indigo">Reviewing</span></td>
+                </tr>
+                <tr>
+                  <td><span class="ref-code">CLS/BND/0072</span></td>
+                  <td>Sunil More</td>
+                  <td class="small muted">02-07-2026</td>
+                  <td class="money">₹86,400</td>
+                  <td class="money" style="color:var(--success)">₹0</td>
+                  <td class="td-right"><button class="btn btn-ghost btn-sm">Open</button></td>
+                </tr>
+                <tr>
+                  <td><span class="ref-code">CLS/AND/0129</span></td>
+                  <td class="small">Ajit Deshpande <span class="badge badge-slate">you</span></td>
+                  <td class="small muted">01-07-2026</td>
+                  <td class="money">₹94,000</td>
+                  <td class="money" style="color:var(--success)">₹0</td>
+                  <td class="td-right"><button class="btn btn-ghost btn-sm disabled" title="You cannot approve your own closing">Locked</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Detail pane -->
+        <div class="card">
+          <div class="card-head">
+            <div><h3>CLS/AND/0130</h3><p>Priya Nair · 02-07-2026 · Andheri (Service)</p></div>
+            <div class="actions"><span class="badge badge-amber"><span class="bdot"></span>Pending WM</span></div>
+          </div>
+          <div class="card-pad">
+            <div class="alert alert-warn mb-2">
+              <span data-icon="alert"></span>
+              <div><b>Variance −₹200 (short).</b> Reason: <i>petty conveyance expense paid in cash, not entered as a voucher; will be recorded tomorrow.</i></div>
+            </div>
+            <div class="sumrow"><span class="k">Opening cash</span><span class="v num">₹1,20,000</span></div>
+            <div class="sumrow"><span class="k">＋ Cash collections</span><span class="v num">₹1,64,520</span></div>
+            <div class="sumrow"><span class="k">− Expenses</span><span class="v num">₹12,270</span></div>
+            <div class="sumrow"><span class="k">− Deposits</span><span class="v num">₹1,50,000</span></div>
+            <div class="sumrow"><span class="k">Expected</span><span class="v num">₹1,22,250</span></div>
+            <div class="sumrow"><span class="k">Physical counted</span><span class="v num">₹1,22,050</span></div>
+            <div class="sumrow total"><span class="k">Variance</span><span class="v num" style="color:var(--destructive)">−₹200</span></div>
+
+            <div class="flex gap-1 mt-3">
+              <button class="btn btn-danger btn-block" data-open-modal="rejectClosing">Reject</button>
+              <button class="btn btn-success btn-block" data-open-modal="approveClosing" data-icon="check">Approve (L1)</button>
+            </div>
+            <p class="tiny muted center mt-1">Approving routes to Branch Accountant (S. Rao) for physical verification & finalisation.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXPENSES -->
+    <div class="tab-panel" data-panel="expenses">
+      <div class="card">
+        <div class="card-head"><div><h3>Pending expense vouchers</h3><p>Approve within your threshold; higher amounts escalate <span class="muted">(R-02)</span></p></div></div>
+        <div class="table-wrap">
+          <table class="tbl">
+            <thead><tr><th>Voucher</th><th>Head</th><th>Raised by</th><th class="th-right">Amount</th><th>Attachment</th><th class="th-right">Action</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><span class="ref-code">EXP/AND/0311</span></td>
+                <td>Housekeeping</td><td>Priya Nair</td>
+                <td class="money">₹3,200</td>
+                <td><span class="badge badge-slate">bill.pdf</span></td>
+                <td class="td-right"><button class="btn btn-success btn-sm">Approve</button></td>
+              </tr>
+              <tr>
+                <td><span class="ref-code">EXP/AND/0312</span></td>
+                <td>Vehicle fuel</td><td>Priya Nair</td>
+                <td class="money">₹9,070</td>
+                <td><span class="badge badge-slate">receipt.jpg</span></td>
+                <td class="td-right"><button class="btn btn-success btn-sm">Approve</button></td>
+              </tr>
+              <tr style="opacity:.7">
+                <td><span class="ref-code">EXP/AND/0313</span></td>
+                <td>Equipment repair</td><td>Priya Nair</td>
+                <td class="money">₹64,500</td>
+                <td><span class="badge badge-slate">quote.pdf</span></td>
+                <td class="td-right"><span class="badge badge-sky">Escalated → Cluster</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Approve modal -->
+  <div class="modal-overlay" id="approveClosing">
+    <div class="modal">
+      <div class="modal-head"><h3>Approve closing CLS/AND/0130</h3></div>
+      <div class="modal-body">
+        <div class="alert alert-success mb-2"><span data-icon="check"></span><div>You are approving as <b>Works Manager (L1)</b>. Maker ≠ checker verified — you did not create this closing.</div></div>
+        <div class="sumrow"><span class="k">Expected</span><span class="v">₹1,22,250</span></div>
+        <div class="sumrow"><span class="k">Variance</span><span class="v" style="color:var(--destructive)">−₹200 (reason on file)</span></div>
+        <div class="field mt-2"><label>Approval remark <span class="tiny muted">(optional)</span></label><textarea class="textarea" placeholder="Note for the record…">Variance reason acceptable. Ensure voucher is booked tomorrow.</textarea></div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-ghost" data-close-modal>Cancel</button>
+        <button class="btn btn-success" data-close-modal>Confirm approval</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reject modal -->
+  <div class="modal-overlay" id="rejectClosing">
+    <div class="modal">
+      <div class="modal-head"><h3>Reject closing CLS/AND/0130</h3></div>
+      <div class="modal-body">
+        <div class="alert alert-warn mb-2"><span data-icon="alert"></span><div>The closing returns to the cashier for correction & resubmission. A remark is mandatory.</div></div>
+        <div class="field"><label>Reason for rejection <span class="req">*</span></label><textarea class="textarea" placeholder="Explain what must be corrected…"></textarea></div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-ghost" data-close-modal>Cancel</button>
+        <button class="btn btn-danger-solid" data-close-modal>Confirm rejection</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/app.js"></script>
+</body>
+</html>
